@@ -1,0 +1,55 @@
+{
+  "model_path": "C:\\Users\\rajsa\\Desktop\\document-forgery-ai\\models\\document_forgery_model.pth",
+  "selected_device": "CPU",
+  "architecture": "mobilenet_v3_small",
+  "class_mapping": {
+    "genuine": 0,
+    "forged": 1
+  },
+  "image_size": [
+    224,
+    224
+  ],
+  "total_test_images": 1894,
+  "evaluation_duration_seconds": 14.94,
+  "metrics": {
+    "accuracy": 61.72,
+    "precision": 51.89,
+    "recall": 78.41,
+    "f1_score": 62.45,
+    "correct_predictions": 1169,
+    "incorrect_predictions": 725,
+    "per_class": {
+      "genuine": {
+        "precision": 77.32,
+        "recall": 50.31,
+        "f1_score": 60.96,
+        "support": 1125
+      },
+      "forged": {
+        "precision": 51.89,
+        "recall": 78.41,
+        "f1_score": 62.45,
+        "support": 769
+      }
+    }
+  },
+  "confusion_matrix": {
+    "tn": 566,
+    "fp": 559,
+    "fn": 166,
+    "tp": 603
+  },
+  "overfitting_analysis": {
+    "overfitting_detected": true,
+    "gap_percentage_points": 19.56,
+    "notes": [
+      "Overfitting flag: Training accuracy exceeds test accuracy by 19.56% (> 8.0% benchmark).",
+      "Notice: Forged-class recall is 78.41% (benchmark: ~85%). The model should be paired with multi-spectrum ELA and OCR layout heuristics."
+    ],
+    "train_accuracy": 81.28,
+    "val_accuracy": 65.04,
+    "test_accuracy": 61.721224920802534
+  },
+  "generated_at": "2026-09-17 03:27:34"
+}

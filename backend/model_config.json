@@ -1,0 +1,102 @@
+{
+  "version": "2.2.0",
+  "updated_at": "2026-09-17 02:24:52",
+  "global": {
+    "base_confidence": 88.0,
+    "low_confidence_threshold": 60.0,
+    "genuine_max_default": 28,
+    "forged_min_default": 65
+  },
+  "categories": {
+    "id_card": {
+      "weights": {
+        "software": 1.1,
+        "ela": 1.0,
+        "noise": 0.9,
+        "copy_move": 1.2,
+        "layout": 0.8,
+        "validation": 1.3
+      },
+      "thresholds": {
+        "genuine_max": 32,
+        "forged_min": 62
+      },
+      "noise_threshold_mult": 3.0,
+      "min_corroborating_signals": 2,
+      "training_samples_genuine": 13,
+      "training_samples_forged": 9
+    },
+    "certificate": {
+      "weights": {
+        "software": 1.1,
+        "ela": 1.1,
+        "noise": 1.0,
+        "copy_move": 1.3,
+        "layout": 0.9,
+        "validation": 1.1
+      },
+      "thresholds": {
+        "genuine_max": 32,
+        "forged_min": 60
+      },
+      "noise_threshold_mult": 2.8,
+      "min_corroborating_signals": 2,
+      "training_samples_genuine": 12,
+      "training_samples_forged": 8
+    },
+    "marksheet": {
+      "weights": {
+        "software": 1.0,
+        "ela": 1.0,
+        "noise": 0.9,
+        "copy_move": 1.2,
+        "layout": 1.0,
+        "validation": 1.2
+      },
+      "thresholds": {
+        "genuine_max": 22,
+        "forged_min": 60
+      },
+      "noise_threshold_mult": 2.9,
+      "min_corroborating_signals": 2,
+      "training_samples_genuine": 11,
+      "training_samples_forged": 5
+    },
+    "invoice_receipt": {
+      "weights": {
+        "software": 1.0,
+        "ela": 0.9,
+        "noise": 0.85,
+        "copy_move": 1.1,
+        "layout": 0.9,
+        "validation": 1.3
+      },
+      "thresholds": {
+        "genuine_max": 22,
+        "forged_min": 60
+      },
+      "noise_threshold_mult": 3.0,
+      "min_corroborating_signals": 2,
+      "training_samples_genuine": 8,
+      "training_samples_forged": 11
+    },
+    "general_scanned": {
+      "weights": {
+        "software": 1.0,
+        "ela": 0.8,
+        "noise": 0.8,
+        "copy_move": 1.0,
+        "layout": 0.7,
+        "validation": 1.0
+      },
+      "thresholds": {
+        "genuine_max": 22,
+        "forged_min": 60
+      },
+      "noise_threshold_mult": 3.2,
+      "min_corroborating_signals": 2,
+      "training_samples_genuine": 11,
+      "training_samples_forged": 12
+    }
+  }
+}
