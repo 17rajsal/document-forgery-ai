@@ -659,7 +659,7 @@ async def upload_document(
     except Exception as e:
         logger.error(f"Forensic pipeline error for upload {safe_basename}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Forensic pipeline error: {str(e)}")
-
+
 # Additive Proofly v1 contract; preserves legacy routes for existing clients.
 from intelligence.api import router as intelligence_router
 app.include_router(intelligence_router)

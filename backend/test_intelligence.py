@@ -55,6 +55,12 @@ class IntelligenceTests(unittest.TestCase):
         self.assertEqual(result.verification_status,'unable_to_verify')
         self.assertEqual(result.evidence,[])
 
+    def test_evidence_does_not_implicitly_load_adjacent_corpus(self):
+        with patch('intelligence.evidence.Path.is_file',return_value=True):
+            store=EvidenceStore()
+        self.assertFalse(store.available)
+        self.assertEqual(store.records,[])
+
     def test_lookup_binds_exact_entity_and_claim(self):
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'corpus.json'

@@ -9,16 +9,8 @@ class EvidenceStore:
     def __init__(self, path=None):
         self.records = []
         self.available = False
+        # Explicit configuration only: neighboring demo files are not verified sources.
         target_path = path
-        if target_path is None:
-            import os
-            env_path = os.getenv('PROOFLY_EVIDENCE_CORPUS')
-            if env_path:
-                target_path = env_path
-            else:
-                default_file = Path(__file__).resolve().parent / 'evidence_corpus.json'
-                if default_file.is_file():
-                    target_path = str(default_file)
         if target_path:
             try:
                 records = json.loads(Path(target_path).read_text(encoding='utf-8-sig'))

@@ -63,6 +63,7 @@ Optional `PROOFLY_EVIDENCE_CORPUS` points to a curator-maintained JSON array:
 `[{"claim_text":"exact extracted text","evidence":{"source_url":"https://...",
 "title":"source title","retrieved_at":"ISO timestamp","excerpt":"actual excerpt",
 "entity":"exact entity","source_quality":"authoritative","relation":"supported"}}]`.
+Adjacent demo corpus files are not loaded automatically.
 The curator must supply genuine records and the actual relationship; the backend
 never manufactures citations. HTTPS/excerpt checks and exact entity/claim matching
 prevent unrelated source records from being reused. Authoritative records sort first.
@@ -116,7 +117,7 @@ predictions/ground-truth masks. No fabricated metrics.
 
 ## Validation and known limitations
 
-Regression suite covers repeated-span localization, negation, schema bounds, URL
+18 passing regression tests cover repeated-span localization, negation, schema bounds, URL
 parsing, evidence failures/exact binding, multipage processing, unavailable OCR,
 blank-page forensics, leakage grouping, known metrics, upload/storage, file signature,
 OpenAPI, detector isolation, calendar dates and edit-mask coverage. Generated two-page
