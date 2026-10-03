@@ -51,67 +51,25 @@ def create_grouped_splits(
     grouping (base_id) so that all augmentations/crops/re-compressions of a document
     reside in the SAME split, preventing data leakage.
     """
-    random.seed(seed)
-
-    # Group by (document_type, label, base_id) for stratified grouping
-    groups: Dict[str, List[Dict[str, Any]]] = {}
-    for r in records:
-        bid = r.get("base_id") or r.get("filename", "")
-        base_prefix = bid.split("_var")[0].split("_aug")[0]
-        group_key = f"{r['document_type']}_{r['label']}_{base_prefix}"
-        groups.setdefault(group_key, []).append(r)
-
-    # Stratify by (document_type, label)
-    strata: Dict[str, List[str]] = {}
-    for gkey, items in groups.items():
-        doc_type = items[0]["document_type"]
-        label = items[0]["label"]
-        stratum_key = f"{doc_type}_{label}"
-        strata.setdefault(stratum_key, []).append(gkey)
-
-    train_records = []
-    val_records = []
-    test_records = []
-
-    for stratum_key, gkeys in strata.items():
-        random.shuffle(gkeys)
-        n = len(gkeys)
-        n_train = int(round(n * train_ratio))
-        n_val = int(round(n * val_ratio))
-        if n_train + n_val > n:
-            n_train = max(1, n - n_val)
-
-        train_keys = set(gkeys[:n_train])
-        val_keys = set(gkeys[n_train:n_train + n_val])
-        test_keys = set(gkeys[n_train + n_val:])
-
-        # Ensure small categories have validation and test coverage
-        if n >= 3:
-            if not val_keys and len(train_keys) > 1:
-                moved = list(train_keys)[-1]
-                train_keys.remove(moved)
-                val_keys.add(moved)
-            if not test_keys and len(train_keys) > 1:
-                moved = list(train_keys)[-1]
-                train_keys.remove(moved)
-                test_keys.add(moved)
-
-        for gk in gkeys:
-            items = groups[gk]
-            if gk in train_keys:
-                for it in items:
-                    it["split"] = "train"
-                    train_records.append(it)
-            elif gk in val_keys:
-                for it in items:
-                    it["split"] = "validation"
-                    val_records.append(it)
-            else:
-                for it in items:
-                    it["split"] = "test"
-                    test_records.append(it)
-
-    return train_records, val_records, test_records
+    if min(train_ratio, val_ratio, test_ratio) < 0 or abs(train_ratio + val_ratio + test_ratio - 1) > 1e-8:
+        raise ValueError("Split ratios must be nonnegative and sum to one")
+    groups = {}
+    for record in records:
+        source = record.get("source_id") or record.get("base_id")
+        if not source:
+            raise ValueError("Explicit source identity is required for leakage-free splits")
+        groups.setdefault(source, []).append(record)
+    keys = sorted(groups)
+    random.Random(seed).shuffle(keys)
+    n_train = int(len(keys) * train_ratio)
+    n_val = int(len(keys) * val_ratio)
+    partitions = ([], [], [])
+    for index, source in enumerate(keys):
+        partition = 0 if index < n_train else 1 if index < n_train + n_val else 2
+        split = ("train", "validation", "test")[partition]
+        for record in groups[source]:
+            partitions[partition].append({**record, "split": split})
+    return partitions
 
 
 def save_manifest(records: List[Dict[str, Any]], manifest_path: str = MANIFEST_PATH):

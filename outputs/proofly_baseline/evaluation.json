@@ -1,0 +1,159 @@
+{
+  "architecture": "L2 logistic regression over six image summary features",
+  "source_audit_before": {
+    "records": 700,
+    "source_groups": 100,
+    "leaking_sources": [
+      "id_card_020",
+      "id_card_005",
+      "id_card_010",
+      "id_card_014",
+      "id_card_016",
+      "id_card_007",
+      "id_card_018",
+      "id_card_009",
+      "id_card_004",
+      "id_card_012",
+      "id_card_017",
+      "id_card_002",
+      "id_card_003",
+      "id_card_001",
+      "certificate_010",
+      "certificate_020",
+      "certificate_003",
+      "certificate_014",
+      "certificate_009",
+      "certificate_012",
+      "certificate_017",
+      "certificate_018",
+      "marksheet_016",
+      "marksheet_011",
+      "marksheet_006",
+      "marksheet_005",
+      "invoice_receipt_009",
+      "invoice_receipt_020",
+      "invoice_receipt_004",
+      "invoice_receipt_007",
+      "invoice_receipt_011",
+      "invoice_receipt_014",
+      "invoice_receipt_016",
+      "invoice_receipt_002",
+      "invoice_receipt_017",
+      "invoice_receipt_019",
+      "general_scanned_009",
+      "general_scanned_016",
+      "general_scanned_010",
+      "general_scanned_014",
+      "general_scanned_005",
+      "general_scanned_001",
+      "general_scanned_002",
+      "general_scanned_008",
+      "general_scanned_017",
+      "general_scanned_011",
+      "id_card_008",
+      "certificate_008",
+      "certificate_002",
+      "certificate_019",
+      "certificate_004",
+      "marksheet_007",
+      "marksheet_019",
+      "marksheet_008",
+      "marksheet_018",
+      "invoice_receipt_018",
+      "invoice_receipt_003",
+      "invoice_receipt_005"
+    ],
+    "cross_split_duplicate_hashes": 0,
+    "missing_files": [],
+    "missing_source_ids": [],
+    "invalid_splits": 0,
+    "manipulation_counts": {
+      "unspecified": 700
+    },
+    "missing_manipulation_labels": [
+      "genuine",
+      "traditional_edit",
+      "text_replacement",
+      "number_replacement",
+      "date_replacement",
+      "qr_replacement",
+      "logo_replacement",
+      "ai_erase",
+      "inpainting",
+      "generative_fill",
+      "recompressed_screenshot",
+      "low_resolution"
+    ],
+    "safe_to_train": false
+  },
+  "source_audit_after": {
+    "records": 700,
+    "source_groups": 100,
+    "leaking_sources": [],
+    "cross_split_duplicate_hashes": 0,
+    "missing_files": [],
+    "missing_source_ids": [],
+    "invalid_splits": 0,
+    "manipulation_counts": {
+      "unspecified": 700
+    },
+    "missing_manipulation_labels": [
+      "genuine",
+      "traditional_edit",
+      "text_replacement",
+      "number_replacement",
+      "date_replacement",
+      "qr_replacement",
+      "logo_replacement",
+      "ai_erase",
+      "inpainting",
+      "generative_fill",
+      "recompressed_screenshot",
+      "low_resolution"
+    ],
+    "safe_to_train": true
+  },
+  "split_counts": {
+    "train": 420,
+    "validation": 140,
+    "test": 140
+  },
+  "threshold": 0.27,
+  "test": {
+    "samples": 140,
+    "precision": 0.4444444444444444,
+    "recall": 1.0,
+    "f1": 0.6153846153846154,
+    "false_positive_rate": 0.9375,
+    "roc_auc": 0.5845833333333333,
+    "localisation_iou": null,
+    "confusion": {
+      "tp": 60,
+      "fp": 75,
+      "tn": 5,
+      "fn": 0
+    }
+  },
+  "per_manipulation": {
+    "unspecified": {
+      "samples": 140,
+      "precision": 0.4444444444444444,
+      "recall": 1.0,
+      "f1": 0.6153846153846154,
+      "false_positive_rate": 0.9375,
+      "roc_auc": 0.5845833333333333,
+      "localisation_iou": null,
+      "confusion": {
+        "tp": 60,
+        "fp": 75,
+        "tn": 5,
+        "fn": 0
+      }
+    }
+  },
+  "limitations": [
+    "Synthetic repository corpus only; not independent real-world validation.",
+    "Manipulation subtypes and localization masks absent in legacy manifest.",
+    "Not enabled in API fusion. Scores are not calibrated probabilities."
+  ]
+}

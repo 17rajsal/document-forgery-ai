@@ -20,6 +20,10 @@ def train_and_calibrate(sample_limit: int = 150):
     print("=======================================================\n")
 
     manifest = load_manifest()
+    from intelligence.training import audit
+    audit_result = audit(manifest, os.path.join(os.path.dirname(__file__), "..", "dataset"))
+    if not audit_result["safe_to_train"]:
+        raise ValueError("Dataset failed source-level leakage audit; repair splits before calibration")
     train_set = [r for r in manifest if r["split"] == "train"]
     val_set = [r for r in manifest if r["split"] == "validation"]
 

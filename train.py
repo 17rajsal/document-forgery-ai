@@ -281,6 +281,16 @@ def train(args):
     val_dataset = DocumentImageFolder(val_dir, transform=eval_transform)
     test_dataset = DocumentImageFolder(test_dir, transform=eval_transform)
 
+    # Require provenance for every image before fitting a model.
+    from backend.intelligence.training import audit_image_folders
+    provenance = audit_image_folders(DATASET_ROOT, {
+        "train": train_dataset.samples,
+        "validation": val_dataset.samples,
+        "test": test_dataset.samples,
+    })
+    if not provenance["safe_to_train"]:
+        raise ValueError("Training blocked by dataset provenance audit: " + str(provenance))
+
     # Calculate class weights to handle imbalance
     train_targets = [s[1] for s in train_dataset.samples]
     n_samples = len(train_targets)
