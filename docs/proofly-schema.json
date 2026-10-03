@@ -1,0 +1,555 @@
+{
+  "$defs": {
+    "Assessment": {
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "enum": [
+            "LOW",
+            "MODERATE",
+            "HIGH"
+          ],
+          "title": "Level",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        }
+      },
+      "required": [
+        "level",
+        "summary",
+        "confidence"
+      ],
+      "title": "Assessment",
+      "type": "object"
+    },
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "minimum": 1,
+          "title": "Page",
+          "type": "integer"
+        },
+        "bbox": {
+          "anyOf": [
+            {
+              "maxItems": 4,
+              "minItems": 4,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bbox"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "extracted_entity": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Extracted Entity"
+        },
+        "verification_status": {
+          "default": "unable_to_verify",
+          "enum": [
+            "supported",
+            "partially_supported",
+            "conflicting",
+            "not_corroborated",
+            "unable_to_verify"
+          ],
+          "title": "Verification Status",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "page",
+        "confidence",
+        "text",
+        "category"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "Destination": {
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "minimum": 1,
+          "title": "Page",
+          "type": "integer"
+        },
+        "bbox": {
+          "anyOf": [
+            {
+              "maxItems": 4,
+              "minItems": 4,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bbox"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        },
+        "domain": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Domain"
+        },
+        "payment_identifier": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Payment Identifier"
+        },
+        "concerns": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Concerns",
+          "type": "array"
+        }
+      },
+      "required": [
+        "page",
+        "confidence",
+        "value"
+      ],
+      "title": "Destination",
+      "type": "object"
+    },
+    "Document": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "pages": {
+          "minimum": 1,
+          "title": "Pages",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "filename",
+        "pages"
+      ],
+      "title": "Document",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "excerpt": {
+          "title": "Excerpt",
+          "type": "string"
+        },
+        "entity": {
+          "title": "Entity",
+          "type": "string"
+        },
+        "source_quality": {
+          "default": "unassessed",
+          "enum": [
+            "authoritative",
+            "public",
+            "unassessed"
+          ],
+          "title": "Source Quality",
+          "type": "string"
+        },
+        "relation": {
+          "enum": [
+            "supported",
+            "partially_supported",
+            "conflicting",
+            "not_corroborated",
+            "unable_to_verify"
+          ],
+          "title": "Relation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_url",
+        "title",
+        "retrieved_at",
+        "excerpt",
+        "entity",
+        "relation"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Explanation": {
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "title": "En",
+          "type": "string"
+        },
+        "hi": {
+          "title": "Hi",
+          "type": "string"
+        }
+      },
+      "required": [
+        "en",
+        "hi"
+      ],
+      "title": "Explanation",
+      "type": "object"
+    },
+    "Finding": {
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "minimum": 1,
+          "title": "Page",
+          "type": "integer"
+        },
+        "bbox": {
+          "anyOf": [
+            {
+              "maxItems": 4,
+              "minItems": 4,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bbox"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        },
+        "explanation": {
+          "title": "Explanation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "page",
+        "confidence",
+        "type",
+        "explanation"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "Identity": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "title": "Type",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        },
+        "page": {
+          "minimum": 1,
+          "title": "Page",
+          "type": "integer"
+        },
+        "inconsistencies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Inconsistencies",
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "value",
+        "page"
+      ],
+      "title": "Identity",
+      "type": "object"
+    },
+    "SensitiveField": {
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "minimum": 1,
+          "title": "Page",
+          "type": "integer"
+        },
+        "bbox": {
+          "anyOf": [
+            {
+              "maxItems": 4,
+              "minItems": 4,
+              "prefixItems": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bbox"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "string"
+        },
+        "concern": {
+          "default": "",
+          "title": "Concern",
+          "type": "string"
+        }
+      },
+      "required": [
+        "page",
+        "confidence",
+        "type",
+        "value"
+      ],
+      "title": "SensitiveField",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "document": {
+      "$ref": "#/$defs/Document"
+    },
+    "assessment": {
+      "$ref": "#/$defs/Assessment"
+    },
+    "forensics": {
+      "items": {
+        "$ref": "#/$defs/Finding"
+      },
+      "title": "Forensics",
+      "type": "array"
+    },
+    "sensitive_fields": {
+      "items": {
+        "$ref": "#/$defs/SensitiveField"
+      },
+      "title": "Sensitive Fields",
+      "type": "array"
+    },
+    "claims": {
+      "items": {
+        "$ref": "#/$defs/Claim"
+      },
+      "title": "Claims",
+      "type": "array"
+    },
+    "qr_codes": {
+      "items": {
+        "$ref": "#/$defs/Destination"
+      },
+      "title": "Qr Codes",
+      "type": "array"
+    },
+    "urls": {
+      "items": {
+        "$ref": "#/$defs/Destination"
+      },
+      "title": "Urls",
+      "type": "array"
+    },
+    "identities": {
+      "items": {
+        "$ref": "#/$defs/Identity"
+      },
+      "title": "Identities",
+      "type": "array"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "safe_actions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Safe Actions",
+      "type": "array"
+    },
+    "simple_explanation": {
+      "$ref": "#/$defs/Explanation"
+    },
+    "technical_details": {
+      "additionalProperties": true,
+      "title": "Technical Details",
+      "type": "object"
+    }
+  },
+  "required": [
+    "document",
+    "assessment",
+    "simple_explanation"
+  ],
+  "title": "Analysis",
+  "type": "object"
+}
