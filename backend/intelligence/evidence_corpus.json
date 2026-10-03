@@ -1,0 +1,50 @@
+[
+  {
+    "claim_text": "guaranteed returns",
+    "evidence": {
+      "source_url": "https://www.sebi.gov.in/legal/regulations/jan-2013/securities-and-exchange-board-of-india-investment-advisers-regulations-2013_24278.html",
+      "title": "SEBI (Investment Advisers) Regulations, 2013 - Code of Conduct",
+      "retrieved_at": "2026-10-03",
+      "excerpt": "Under SEBI IA Regulations Code of Conduct Clause 1, investment advisers and market intermediaries are strictly prohibited from promising or guaranteeing fixed, assured, or risk-free returns on securities investments.",
+      "entity": "SEBI",
+      "source_quality": "authoritative",
+      "relation": "conflicting"
+    }
+  },
+  {
+    "claim_text": "zero risk",
+    "evidence": {
+      "source_url": "https://sachet.rbi.org.in/",
+      "title": "RBI Sachet Portal - Public Advisory on Fictitious Offers",
+      "retrieved_at": "2026-10-03",
+      "excerpt": "All market-linked investments carry inherent market risks. Claims of 'zero risk' or 'guaranteed capital multiplication' are recognized indicators of fraudulent unregistered deposit schemes.",
+      "entity": "RBI",
+      "source_quality": "authoritative",
+      "relation": "conflicting"
+    }
+  },
+  {
+    "claim_text": "SEBI approved",
+    "evidence": {
+      "source_url": "https://www.sebi.gov.in/sebiweb/other/OtherAction.do?doRecognisedFpi=yes&intmId=13",
+      "title": "SEBI Intermediary Registration Directory",
+      "retrieved_at": "2026-10-03",
+      "excerpt": "SEBI registers market intermediaries but never 'approves' or endorses individual trading schemes, pre-IPO whatsapp groups, or guaranteed investment packages.",
+      "entity": "SEBI",
+      "source_quality": "authoritative",
+      "relation": "conflicting"
+    }
+  },
+  {
+    "claim_text": "RBI approved",
+    "evidence": {
+      "source_url": "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx",
+      "title": "Reserve Bank of India Advisory on Unauthorized Forex & Investment Portals",
+      "retrieved_at": "2026-10-03",
+      "excerpt": "The Reserve Bank of India does not approve individual private investment programs, guaranteed return clubs, or personal trading account collection pools.",
+      "entity": "RBI",
+      "source_quality": "authoritative",
+      "relation": "conflicting"
+    }
+  }
+]

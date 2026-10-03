@@ -12,6 +12,30 @@ BASE_URL = "http://127.0.0.1:8000"
 passed = 0
 failed = 0
 
+import socket
+import time
+import threading
+
+def is_server_running(host="127.0.0.1", port=8000):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        return s.connect_ex((host, port)) == 0
+
+if not is_server_running():
+    print("[*] Starting local FastAPI server in background thread for integration testing...")
+    sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+    import main as app_module
+    import uvicorn
+    server_thread = threading.Thread(
+        target=lambda: uvicorn.run(app_module.app, host="127.0.0.1", port=8000, log_level="warning"),
+        daemon=True
+    )
+    server_thread.start()
+    for _ in range(40):
+        if is_server_running():
+            print("[*] Local FastAPI server is UP and responding.")
+            break
+        time.sleep(0.2)
+
 def log_test(name, success, detail=""):
     global passed, failed
     if success:
@@ -54,6 +78,14 @@ def post_multipart(path, filename, file_bytes, content_type="application/octet-s
 
 def post_json(path):
     req = urllib.request.Request(BASE_URL + path, data=b"", method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=40) as resp:
+            return resp.status, json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        return e.code, e.read().decode("utf-8")
+
+def get_json(path):
+    req = urllib.request.Request(BASE_URL + path, method="GET")
     try:
         with urllib.request.urlopen(req, timeout=40) as resp:
             return resp.status, json.loads(resp.read().decode("utf-8"))
@@ -234,6 +266,39 @@ try:
     log_test("Forensic Tier Contract Fields", all_present and valid_status, f"Tier: {data.get('authenticity_status')}, Conf: {data.get('confidence_score')}%")
 except Exception as e:
     log_test("Forensic Tier Contract Fields", False, str(e))
+
+# -------------------------------------------------------------
+# 5B. PROOFLY MULTIMODAL & V1 REPORT LOOKUP TESTS
+# -------------------------------------------------------------
+try:
+    status, demo_meta = get_json("/api/proofly/demo-scenarios")
+    log_test("Proofly: Demo Scenarios Metadata", status == 200 and len(demo_meta.get("scenarios", [])) >= 4, f"Found {len(demo_meta.get('scenarios', []))} scenarios")
+except Exception as e:
+    log_test("Proofly: Demo Scenarios Metadata", False, str(e))
+
+try:
+    status, demo_res = post_json("/api/proofly/analyze-demo/kavita_whatsapp_scam")
+    aid = demo_res.get("analysis_id")
+    has_proofly = "proofly" in demo_res
+    concern = demo_res.get("proofly", {}).get("assessment", {}).get("concern_level")
+    log_test("Proofly: Kavita WhatsApp Scam Execution", status == 200 and has_proofly and bool(aid), f"Concern: {concern}, ID: {str(aid)[:8]}...")
+
+    if aid:
+        st_get, v1_data = get_json(f"/api/analysis/{aid}")
+        expected_v1_keys = ["document", "assessment", "forensics", "sensitive_fields", "claims", "qr_codes", "urls", "identities", "evidence", "safe_actions", "simple_explanation", "technical_details"]
+        all_v1_keys = isinstance(v1_data, dict) and all(k in v1_data for k in expected_v1_keys)
+        log_test("Proofly: GET /api/analysis/{id} Contract", st_get == 200 and all_v1_keys, f"Level: {v1_data.get('assessment', {}).get('level') if isinstance(v1_data, dict) else v1_data}")
+
+        st_tech, tech_data = get_json(f"/api/analysis/{aid}/technical")
+        log_test("Proofly: GET /api/analysis/{id}/technical", st_tech == 200 and isinstance(tech_data, dict), f"Tech keys: {len(tech_data) if isinstance(tech_data, dict) else tech_data}")
+
+        st_rep, rep_data = get_json(f"/api/analysis/{aid}/report-data")
+        log_test("Proofly: GET /api/analysis/{id}/report-data", st_rep == 200 and isinstance(rep_data, dict) and all(k in rep_data for k in expected_v1_keys), f"Report pages: {rep_data.get('document', {}).get('pages') if isinstance(rep_data, dict) else rep_data}")
+
+        st_v1, v1_alt = get_json(f"/api/v1/analysis/{aid}")
+        log_test("Proofly: GET /api/v1/analysis/{id} Versioned", st_v1 == 200 and isinstance(v1_alt, dict) and v1_alt.get("schema_version") == "1.0", "Schema version: 1.0")
+except Exception as e:
+    log_test("Proofly: Analysis Lookup Suite", False, str(e))
 
 # -------------------------------------------------------------
 # 6. SECURITY & ROBUSTNESS EDGE CASES

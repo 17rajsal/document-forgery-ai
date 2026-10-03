@@ -374,7 +374,7 @@ def perform_ocr(image: Image.Image) -> Tuple[str, List[Dict[str, Any]], float]:
 # CORE PIPELINE PROCESSOR
 # =========================================================
 
-def process_document_pipeline(file_path: str, original_filename: str) -> Dict[str, Any]:
+def process_document_pipeline(file_path: str, original_filename: str, analysis_id: Optional[str] = None) -> Dict[str, Any]:
     """
     Executes the comprehensive forensic and OCR pipeline:
       1. Loads/Rasterizes document (PDF, DOCX, TIFF, BMP, WEBP, PNG, JPEG)
@@ -387,6 +387,8 @@ def process_document_pipeline(file_path: str, original_filename: str) -> Dict[st
       7. Cleans temporary rasterization files safely.
     """
     image, analysis_image_path, total_pages, extra_info = load_document_as_image(file_path)
+    if not analysis_id:
+        analysis_id = uuid.uuid4().hex
 
     try:
         # 1. OCR
@@ -457,7 +459,41 @@ def process_document_pipeline(file_path: str, original_filename: str) -> Dict[st
         # Generate document preview base64
         preview_b64 = image_to_base64_jpeg(image, quality=80)
 
-        return {
+        # 5. Proofly Multimodal Investor-Safety & Forensic Engine
+        try:
+            from proofly.pipeline import run_proofly_pipeline
+            proofly_dossier = run_proofly_pipeline(
+                image=image,
+                file_path=analysis_image_path,
+                original_filename=original_filename,
+                extracted_text=text,
+                ocr_words=words,
+                base_forgery_analysis=forgery_analysis,
+                document_type=document_type
+            )
+        except Exception as e:
+            logger.error(f"Proofly engine execution failure on {original_filename}: {e}", exc_info=True)
+            proofly_dossier = {
+                "available": False,
+                "error": str(e),
+                "assessment": {
+                    "concern_level": "MODERATE",
+                    "status_label": "Verification Concern: Moderate (Fallback)",
+                    "key_findings": [],
+                    "why_am_i_seeing_this": ["Proofly deep inspection encountered a fallback."],
+                    "disclaimer": "Automated verification fallback active."
+                },
+                "visual_evidence_map": [],
+                "plain_explanations": {
+                    "simple_explanation_en": "Document processed under standard forensic mode.",
+                    "simple_explanation_hi": "Document ko standard forensic mode mein jancha gaya hai.",
+                    "voice_script_en": "Notice: Document analysis complete.",
+                    "voice_script_hi": "Dhyan dein: Document ki jaanch poori ho gayi hai.",
+                    "safe_steps": []
+                }
+            }
+
+        out_dict = {
             "status": "SUCCESS",
             "message": "Document analyzed successfully",
             "filename": original_filename,
@@ -468,6 +504,7 @@ def process_document_pipeline(file_path: str, original_filename: str) -> Dict[st
             "classification": forgery_analysis.get("classification", "AUTHENTIC"),
             "authenticity_status": forgery_analysis.get("authenticity_status", forgery_analysis.get("classification", "AUTHENTIC")),
             "risk_level": forgery_analysis.get("risk_level", "LOW"),
+            "concern_level": proofly_dossier.get("assessment", {}).get("concern_level", "LOW"),
             "confidence_score": forgery_analysis.get("confidence_score", 85.0),
             "verdict": forgery_analysis.get("verdict", ""),
             "explanation": forgery_analysis.get("explanation", ""),
@@ -478,7 +515,48 @@ def process_document_pipeline(file_path: str, original_filename: str) -> Dict[st
             "extracted_fields": extracted_fields,
             "forgery_analysis": forgery_analysis,
             "ocr_words": words,
+            "proofly": proofly_dossier,
+            "visual_evidence_map": proofly_dossier.get("visual_evidence_map", []),
+            "analysis_id": analysis_id,
+            "document_id": analysis_id,
         }
+
+        def sanitize_for_json(obj):
+            if isinstance(obj, dict):
+                return {str(k): sanitize_for_json(v) for k, v in obj.items()}
+            elif isinstance(obj, (list, tuple)):
+                return [sanitize_for_json(x) for x in obj]
+            elif isinstance(obj, np.bool_):
+                return bool(obj)
+            elif isinstance(obj, (np.integer, int)):
+                return int(obj)
+            elif isinstance(obj, (np.floating, float)):
+                return float(obj)
+            elif isinstance(obj, np.ndarray):
+                return obj.tolist()
+            return obj
+
+        try:
+            from proofly.adapter import pipeline_dict_to_analysis
+            from intelligence.api import save_report
+            file_bytes = None
+            if os.path.exists(file_path):
+                try:
+                    with open(file_path, "rb") as f:
+                        file_bytes = f.read()
+                except Exception:
+                    pass
+            analysis_model = pipeline_dict_to_analysis(
+                doc_id=analysis_id,
+                filename=original_filename,
+                pipeline_result=out_dict,
+                file_bytes=file_bytes
+            )
+            save_report(analysis_model)
+        except Exception as e:
+            logger.warning(f"Could not persist v1 Analysis report cache: {e}")
+
+        return sanitize_for_json(out_dict)
 
     finally:
         # Safe cleanup of temporary converted raster files
@@ -511,8 +589,10 @@ def home():
         if os.path.exists(index_file):
             return FileResponse(index_file)
     return {
-        "message": "Document Forgery AI is running!",
-        "version": "2.1.0",
+        "product": "Proofly",
+        "tagline": "See beyond what looks legit.",
+        "hackathon": "SANGYAN Investor Resilience Hackathon (Tracks A, C, E)",
+        "version": "3.0.0",
         "supported_formats": ["JPG", "JPEG", "PNG", "WEBP", "PDF", "TIFF", "BMP", "DOCX"],
         "tesseract": pytesseract.pytesseract.tesseract_cmd
     }
@@ -523,12 +603,56 @@ def health_check():
     tess_available = os.path.exists(pytesseract.pytesseract.tesseract_cmd)
     return {
         "status": "HEALTHY",
+        "product": "Proofly",
+        "tagline": "See beyond what looks legit.",
+        "hackathon": "SANGYAN Investor Resilience Hackathon",
         "ocr_available": tess_available,
         "tesseract_path": pytesseract.pytesseract.tesseract_cmd,
         "upload_dir_configured": bool(UPLOAD_DIR),
         "supported_formats": ["JPG", "JPEG", "PNG", "WEBP", "PDF", "TIFF", "BMP", "DOCX"],
         "max_file_size_mb": MAX_FILE_SIZE_BYTES // (1024 * 1024)
     }
+
+
+@app.get("/api/proofly/demo-scenarios")
+def get_proofly_demo_scenarios():
+    """
+    Returns curated, deterministic benchmark scenarios for the SANGYAN Hackathon,
+    including the Kavita WhatsApp Pre-IPO scam persona.
+    """
+    from proofly.demo_scenarios import get_all_demo_scenarios
+    return {"scenarios": get_all_demo_scenarios()}
+
+
+@app.post("/api/proofly/analyze-demo/{demo_id}")
+def analyze_proofly_demo(demo_id: str):
+    """
+    Generates a high-fidelity visual benchmark document for the requested demo scenario
+    and runs the full multimodal Proofly verification pipeline.
+    """
+    from proofly.demo_scenarios import DEMO_SCENARIOS, render_demo_canvas
+    if demo_id not in DEMO_SCENARIOS:
+        raise HTTPException(status_code=404, detail=f"Demo scenario '{demo_id}' not found.")
+
+    scenario = DEMO_SCENARIOS[demo_id]
+    demo_filename = f"proofly_demo_{demo_id}.jpg"
+    demo_path = os.path.join(UPLOAD_DIR, demo_filename)
+
+    try:
+        render_demo_canvas(demo_id, demo_path)
+        result = process_document_pipeline(demo_path, scenario["filename"])
+        result["demo_scenario_info"] = {
+            "demo_id": demo_id,
+            "title": scenario["title"],
+            "persona": scenario["persona"],
+            "category": scenario["category"],
+            "claimed_entity": scenario["claimed_entity"]
+        }
+        return result
+    except Exception as e:
+        logger.error(f"Failed to execute demo scenario {demo_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Demo execution failed: {str(e)}")
+
 
 
 @app.get("/api/samples")
@@ -642,7 +766,8 @@ async def upload_document(
         )
 
     # Save to disk with isolated unique UUID
-    unique_prefix = uuid.uuid4().hex[:12]
+    analysis_id = uuid.uuid4().hex
+    unique_prefix = analysis_id[:12]
     stored_filename = f"{unique_prefix}_{safe_basename}"
     file_path = os.path.join(UPLOAD_DIR, stored_filename)
 
@@ -654,12 +779,13 @@ async def upload_document(
         raise HTTPException(status_code=500, detail="Failed to store uploaded file on server.")
 
     try:
-        result = process_document_pipeline(file_path, safe_basename)
+        result = process_document_pipeline(file_path, safe_basename, analysis_id=analysis_id)
         return result
     except Exception as e:
         logger.error(f"Forensic pipeline error for upload {safe_basename}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Forensic pipeline error: {str(e)}")
 
 # Additive Proofly v1 contract; preserves legacy routes for existing clients.
-from intelligence.api import router as intelligence_router
+from intelligence.api import router as intelligence_router, unversioned_router as intelligence_unversioned_router
 app.include_router(intelligence_router)
+app.include_router(intelligence_unversioned_router)
