@@ -7,3 +7,10 @@ models/
 *.pkl
 *.pth
 *.pt
+
+# Proofly local analysis artifacts (may contain extracted document text)
+backend/analysis_results/
+outputs/test-tmp/
+outputs/proofly_synthetic/
+outputs/proofly_smoke/
+outputs/proofly_smoke_check.py
