@@ -2,6 +2,7 @@ import os
 import shutil
 import uuid
 import logging
+import asyncio
 from typing import Optional, List, Dict, Any, Tuple
 from pydantic import BaseModel
 from fastapi import FastAPI, UploadFile, File, HTTPException
@@ -987,7 +988,7 @@ async def upload_document(
         raise HTTPException(status_code=500, detail="Failed to store uploaded file on server.")
 
     try:
-        result = process_document_pipeline(file_path, safe_basename, analysis_id=analysis_id)
+        result = await asyncio.to_thread(process_document_pipeline, file_path, safe_basename, analysis_id=analysis_id)
         return result
     except Exception as e:
         logger.error(f"Forensic pipeline error for upload {safe_basename}: {e}", exc_info=True)
