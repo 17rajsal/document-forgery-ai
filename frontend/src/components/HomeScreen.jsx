@@ -11,11 +11,13 @@ import {
   CheckCircle,
   Lock,
   Globe,
-  FileCheck
+  FileCheck,
+  Camera
 } from 'lucide-react';
 
 export default function HomeScreen({
   onNavigateToAnalyze,
+  onNavigateToCamera,
   onNavigateToSection,
   language = 'en'
 }) {
@@ -37,21 +39,48 @@ export default function HomeScreen({
 
         {/* PRIMARY CALL TO ACTION BUTTONS */}
         <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
+          {/* 1. Analyze Now */}
           <button
             onClick={onNavigateToAnalyze}
-            className="flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm transition cursor-pointer shadow-xs"
+            className="flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm transition-all duration-150 cursor-pointer shadow-xs hover:shadow-md hover:shadow-blue-600/20 active:scale-[0.98]"
           >
             <span>Analyze Now</span>
             <ArrowRight className="h-4 w-4" />
           </button>
 
+          {/* 2. Use Camera */}
+          <button
+            onClick={onNavigateToCamera}
+            className="relative group overflow-hidden flex items-center gap-2.5 px-5 py-3 rounded-lg bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-800 border border-slate-300 hover:border-blue-400 font-semibold text-sm transition-all duration-200 cursor-pointer shadow-2xs hover:shadow-md active:scale-[0.98]"
+          >
+            {/* Gentle shimmer light sweep */}
+            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-blue-500/10 to-transparent pointer-events-none" />
+
+            <div className="relative flex items-center gap-2">
+              <Camera className="h-4 w-4 text-blue-600 group-hover:scale-110 transition-transform duration-200" />
+              <span>Use Camera</span>
+            </div>
+
+            {/* Subtle Live Capture indicator pill */}
+            <span className="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200/60">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Live</span>
+            </span>
+          </button>
+
+          {/* 3. How It Works */}
           <button
             onClick={() => onNavigateToSection && onNavigateToSection('how-it-works')}
-            className="flex items-center gap-2 px-5 py-3 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-semibold text-sm transition cursor-pointer"
+            className="flex items-center gap-2 px-5 py-3 rounded-lg bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 border border-slate-300 hover:border-slate-400 font-semibold text-sm transition-all duration-150 cursor-pointer active:scale-[0.98]"
           >
             <span>How It Works</span>
           </button>
         </div>
+
+        {/* HELPER SUB-TEXT */}
+        <p className="text-xs text-slate-500 pt-1 m-0">
+          Upload, capture with camera, or paste content for review.
+        </p>
       </section>
 
       {/* SECTION 1 — What You Can Check */}

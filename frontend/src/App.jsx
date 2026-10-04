@@ -11,6 +11,7 @@ const API_BASE = import.meta.env.VITE_API_URL || '';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('home'); // 'home' | 'analyze' | 'results'
+  const [analyzeInitialMode, setAnalyzeInitialMode] = useState('upload'); // 'upload' | 'camera'
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState(0);
@@ -159,8 +160,9 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
-  const handleNavigate = (target) => {
-    if (target === 'analyze') {
+  const handleNavigate = (target, mode = 'upload') => {
+    if (target === 'analyze' || target === 'camera') {
+      setAnalyzeInitialMode(target === 'camera' || mode === 'camera' ? 'camera' : 'upload');
       setCurrentScreen('analyze');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (target === 'home') {
@@ -281,7 +283,8 @@ export default function App() {
       <main className="flex-1 px-4 sm:px-8 py-6 max-w-6xl w-full mx-auto">
         {currentScreen === 'home' && (
           <HomeScreen
-            onNavigateToAnalyze={() => setCurrentScreen('analyze')}
+            onNavigateToAnalyze={() => handleNavigate('analyze', 'upload')}
+            onNavigateToCamera={() => handleNavigate('camera', 'camera')}
             onNavigateToSection={handleNavigate}
             language={language}
           />
@@ -289,6 +292,7 @@ export default function App() {
 
         {currentScreen === 'analyze' && (
           <AnalyzeScreen
+            initialMode={analyzeInitialMode}
             onAnalyzeFile={handleAnalyzeFile}
             onAnalyzeText={handleAnalyzeText}
             onRunSample={handleRunSample}

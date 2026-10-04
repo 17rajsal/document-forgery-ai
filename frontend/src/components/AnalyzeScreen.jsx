@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   UploadCloud,
   FileText,
@@ -15,6 +15,7 @@ import {
 import CameraCapture from './CameraCapture';
 
 export default function AnalyzeScreen({
+  initialMode = 'upload',
   onAnalyzeFile,
   onAnalyzeText,
   onRunSample,
@@ -25,7 +26,14 @@ export default function AnalyzeScreen({
   language = 'en'
 }) {
   const [activeTab, setActiveTab] = useState('document'); // 'document' | 'message'
-  const [documentInputMode, setDocumentInputMode] = useState('upload'); // 'upload' | 'camera'
+  const [documentInputMode, setDocumentInputMode] = useState(initialMode === 'camera' ? 'camera' : 'upload'); // 'upload' | 'camera'
+
+  useEffect(() => {
+    if (initialMode === 'camera') {
+      setActiveTab('document');
+      setDocumentInputMode('camera');
+    }
+  }, [initialMode]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [pastedText, setPastedText] = useState('');

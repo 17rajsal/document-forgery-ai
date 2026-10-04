@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Camera, RotateCcw, ArrowRight, X, AlertTriangle, ShieldCheck, Upload } from 'lucide-react';
+import { Camera, RotateCcw, ArrowRight, X, AlertTriangle, ShieldCheck, Upload, Loader2, Sparkles } from 'lucide-react';
 
 export default function CameraCapture({
   onPhotoCaptured,
@@ -177,8 +177,8 @@ export default function CameraCapture({
         </div>
       ) : capturedImageUrl ? (
         /* CAPTURED PREVIEW MODE */
-        <div className="space-y-3">
-          <div className="relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-300 shadow-inner">
+        <div className="space-y-3.5 transition-all duration-200">
+          <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-300 shadow-inner">
             <img
               src={capturedImageUrl}
               alt="Captured document"
@@ -214,22 +214,31 @@ export default function CameraCapture({
               <button
                 onClick={handleAnalyzePhoto}
                 disabled={isAnalyzing}
-                className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold shadow-md shadow-blue-600/25 transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-bold shadow-md shadow-blue-600/25 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 active:scale-[0.98]"
               >
-                <span>Analyze Photo</span>
-                <ArrowRight className="h-4 w-4" />
+                {isAnalyzing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Analyzing Photo...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Analyze Photo</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
               </button>
             </div>
           </div>
         </div>
       ) : (
         /* LIVE CAMERA PREVIEW MODE */
-        <div className="space-y-3">
-          <div className="relative rounded-2xl overflow-hidden bg-black border border-slate-300 aspect-[4/3] max-h-[380px] flex items-center justify-center">
+        <div className="space-y-3.5 transition-all duration-200">
+          <div className="relative rounded-2xl overflow-hidden bg-black border border-slate-300 aspect-[4/3] max-h-[380px] flex items-center justify-center shadow-inner">
             {isStarting && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 text-white z-10 text-xs gap-2">
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/95 text-white z-20 text-xs gap-2">
                 <Camera className="h-6 w-6 animate-pulse text-blue-400" />
-                <span>Starting camera...</span>
+                <span className="font-medium text-slate-300">Starting camera...</span>
               </div>
             )}
             <video
@@ -239,15 +248,30 @@ export default function CameraCapture({
               muted
               className="w-full h-full object-cover"
             />
-            {/* Guide overlay box */}
-            <div className="absolute inset-4 sm:inset-8 border-2 border-dashed border-white/60 rounded-xl pointer-events-none flex items-start justify-center pt-2">
-              <span className="text-[10px] bg-black/60 backdrop-blur-xs text-white px-2 py-0.5 rounded-md font-mono">
-                Align document inside frame
-              </span>
+
+            {/* Viewfinder Corner Brackets & Center Alignment Guide */}
+            <div className="absolute inset-4 sm:inset-6 pointer-events-none flex flex-col justify-between z-10">
+              <div className="flex justify-between items-start">
+                <div className="w-6 h-6 border-t-2 border-l-2 border-blue-400/90 rounded-tl-md" />
+                <div className="w-6 h-6 border-t-2 border-r-2 border-blue-400/90 rounded-tr-md" />
+              </div>
+
+              {/* Centered Guide Pill */}
+              <div className="self-center">
+                <span className="text-[11px] bg-slate-950/75 backdrop-blur-xs text-white/90 px-3 py-1 rounded-full font-medium border border-white/10 shadow-sm flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Align document inside frame</span>
+                </span>
+              </div>
+
+              <div className="flex justify-between items-end">
+                <div className="w-6 h-6 border-b-2 border-l-2 border-blue-400/90 rounded-bl-md" />
+                <div className="w-6 h-6 border-b-2 border-r-2 border-blue-400/90 rounded-br-md" />
+              </div>
             </div>
           </div>
 
-          {/* Controls */}
+          {/* Controls Bar */}
           <div className="flex items-center justify-between gap-3 pt-1">
             <button
               onClick={onCancel}
@@ -256,20 +280,22 @@ export default function CameraCapture({
               Cancel
             </button>
 
-            {/* Large mobile-friendly capture button */}
+            {/* High-visibility circular shutter capture button */}
             <button
               onClick={handleCapture}
               disabled={isStarting}
-              className="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-bold shadow-lg shadow-blue-600/30 transition flex items-center gap-2 cursor-pointer disabled:opacity-50"
+              className="group relative flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/30 transition-all duration-150 cursor-pointer disabled:opacity-50 active:scale-95"
             >
-              <Camera className="h-5 w-5" />
-              <span>Capture</span>
+              <div className="h-3.5 w-3.5 rounded-full border-2 border-white flex items-center justify-center">
+                <div className="h-1.5 w-1.5 rounded-full bg-white group-hover:scale-125 transition-transform" />
+              </div>
+              <span>Capture Photo</span>
             </button>
 
             {/* Mobile device camera fallback link */}
             <button
               onClick={() => fallbackInputRef.current?.click()}
-              className="text-[11px] text-blue-600 hover:underline font-medium"
+              className="text-[11px] text-blue-600 hover:underline font-medium cursor-pointer"
               title="Use system camera app"
             >
               System Camera
