@@ -231,7 +231,7 @@ Proofly includes rigorous test suites validating security, ML inference, entity 
 # 1. Run Core Multimodal Forensic Tests (10/10 Passed)
 python -m unittest tests/test_proofly.py
 
-# 2. Run Investor Safety & Scam Engine Tests (12/12 Passed)
+# 2. Run Investor Safety & Scam Engine Tests (13/13 Passed)
 python -m unittest tests/test_investor_safety.py
 
 # 3. Run Intelligence API Regression Tests (18/18 Passed)

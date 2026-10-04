@@ -142,6 +142,25 @@ class TestInvestorSafety(unittest.TestCase):
         self.assertIn("₹80,000 within 30 days", scenario["claims_mock"][0]["exact_text"])
         self.assertEqual(scenario["qr_mock"]["upi_details"]["payee_address"], "vikram.personal88@okaxis")
 
+    def test_camera_captured_photo_ingestion(self):
+        """Camera captures produce JPEG images with camera_doc_* naming that parse cleanly."""
+        import main
+        from PIL import Image
+        import io
+        buf = io.BytesIO()
+        Image.new("RGB", (640, 480), color=(240, 240, 240)).save(buf, format="JPEG")
+        with tempfile.NamedTemporaryFile(suffix=".jpg", prefix="camera_doc_1720000000_", delete=False) as f:
+            f.write(buf.getvalue())
+            temp_path = f.name
+        try:
+            pil_img, rendered_path, total_pages, extra_info = main.load_document_as_image(temp_path)
+            self.assertEqual(total_pages, 1)
+            self.assertIsNotNone(pil_img)
+            self.assertEqual(pil_img.size, (640, 480))
+        finally:
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+
 
 if __name__ == "__main__":
     unittest.main()
