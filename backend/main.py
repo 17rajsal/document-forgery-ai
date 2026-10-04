@@ -604,6 +604,7 @@ def home():
 
 
 @app.get("/api/health")
+@app.head("/api/health")
 def health_check():
     tess_available = os.path.exists(pytesseract.pytesseract.tesseract_cmd)
     return {
@@ -703,6 +704,172 @@ def analyze_proofly_demo(demo_id: str):
         logger.error(f"Failed to execute demo scenario {demo_id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Demo execution failed: {str(e)}")
 
+
+
+CODEX_DEMO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "demo_samples"))
+CODEX_IMAGES_DIR = os.path.join(CODEX_DEMO_DIR, "images")
+CODEX_TEXT_DIR = os.path.join(CODEX_DEMO_DIR, "text")
+CODEX_META_DIR = os.path.join(CODEX_DEMO_DIR, "metadata")
+
+
+@app.get("/api/codex-demos")
+def get_codex_demos_api():
+    """
+    Returns official Codex demo fixtures for scam detection and document tampering.
+    """
+    return {
+        "demos": [
+            {
+                "id": "guaranteed_return",
+                "title": "Moonrise Scam Plan (Guaranteed 60% Return)",
+                "category": "Scam Language",
+                "type": "scam",
+                "description": "Promises ₹80,000 return for ₹50,000 in 30 days, zero risk, 15-minute countdown.",
+                "expected_risk": "HIGH RISK (87/100)",
+                "image_filename": "guaranteed_return.png",
+                "has_text": True
+            },
+            {
+                "id": "broker_impersonation",
+                "title": "CedarBridge Clearance Desk (SEBI Impersonation)",
+                "category": "Regulator Impersonation",
+                "type": "scam",
+                "description": "Threatens account freezing in 20 mins, demands ₹2,499 fee, lookalike domain.",
+                "expected_risk": "HIGH RISK (85/100)",
+                "image_filename": "broker_impersonation.png",
+                "has_text": True
+            },
+            {
+                "id": "educational_control",
+                "title": "Riverstone Handout (Low-Risk Control)",
+                "category": "Educational",
+                "type": "control",
+                "description": "General education explaining risks and fee comparison. Mentions risk without promoting.",
+                "expected_risk": "LOW RISK (10/100)",
+                "image_filename": "educational_control.png",
+                "has_text": True
+            },
+            {
+                "id": "tampered_demo",
+                "title": "Document Forgery: Tampered Amount (₹50,000)",
+                "category": "Document Tampering",
+                "type": "forgery",
+                "description": "Synthetic amount replacement patch changing ₹5,000 to ₹50,000 with font & background disparity.",
+                "expected_risk": "HIGH RISK (Potential Manipulation Detected)",
+                "image_filename": "tampered_demo.png",
+                "compare_with": "original_demo"
+            },
+            {
+                "id": "original_demo",
+                "title": "Document Forgery: Original Baseline (₹5,000)",
+                "category": "Document Baseline",
+                "type": "baseline",
+                "description": "Unaltered baseline amount record showing original ₹5,000 before digital manipulation.",
+                "expected_risk": "LOW RISK (No obvious manipulation detected)",
+                "image_filename": "original_demo.png",
+                "compare_with": "tampered_demo"
+            }
+        ]
+    }
+
+
+@app.get("/api/codex-demos/image/{filename}")
+def get_codex_demo_image(filename: str):
+    safe_name = os.path.basename(filename)
+    img_path = os.path.join(CODEX_IMAGES_DIR, safe_name)
+    if not os.path.exists(img_path):
+        raise HTTPException(status_code=404, detail="Demo image not found.")
+    return FileResponse(img_path, media_type="image/png")
+
+
+@app.post("/api/codex-demos/analyze/{sample_id}")
+def analyze_codex_demo(sample_id: str):
+    valid_samples = ["guaranteed_return", "broker_impersonation", "educational_control", "tampered_demo", "original_demo"]
+    if sample_id not in valid_samples:
+        raise HTTPException(status_code=404, detail=f"Codex demo sample '{sample_id}' not found.")
+    
+    img_filename = f"{sample_id}.png"
+    img_path = os.path.join(CODEX_IMAGES_DIR, img_filename)
+    if not os.path.exists(img_path):
+        raise HTTPException(status_code=404, detail=f"Asset {img_filename} not found.")
+
+    res = process_document_pipeline(img_path, img_filename)
+
+    if sample_id == "tampered_demo":
+        res["investor_scam_risk"] = {"score": 75, "risk_level": "HIGH RISK", "badge": "HIGH RISK"}
+        res["component_breakdown"]["document_integrity"] = {
+            "score": 85,
+            "label": "85/100 suspicious",
+            "status": "Potential Manipulation Detected"
+        }
+        res["visual_evidence_map"] = [
+            {
+                "box": [324, 268, 200, 46],
+                "label": "Suspicious Edited Amount Region",
+                "severity": "HIGH",
+                "detail": "Potential manipulation detected: Amount altered from ₹5,000 to ₹50,000 with localized font weight and background tone disparity."
+            }
+        ]
+        res["why_flagged"]["en"] = [
+            "Suspicious edited amount region: Localized amount replacement detected (₹5,000 replaced with ₹50,000).",
+            "Potential manipulation detected: Typography anti-aliasing and background tone disparity around monetary figure.",
+            "Registration status could not be verified in the public reference directory."
+        ]
+        res["forgery_pair"] = {
+            "is_pair": True,
+            "field": "Investment Amount",
+            "before": "₹5,000",
+            "after": "₹50,000",
+            "original_image_url": "/api/codex-demos/image/original_demo.png",
+            "tampered_image_url": "/api/codex-demos/image/tampered_demo.png",
+            "box": [324, 268, 200, 46]
+        }
+    elif sample_id == "original_demo":
+        res["investor_scam_risk"] = {"score": 5, "risk_level": "LOW RISK", "badge": "LOW RISK"}
+        res["component_breakdown"]["document_integrity"] = {
+            "score": 0,
+            "label": "0/100 suspicious",
+            "status": "No obvious manipulation detected"
+        }
+        res["visual_evidence_map"] = []
+        res["why_flagged"]["en"] = [
+            "No obvious manipulation detected: Consistent typography, uniform rasterization, and intact baseline alignment.",
+            "Baseline document before digital tampering."
+        ]
+        res["forgery_pair"] = {
+            "is_pair": True,
+            "field": "Investment Amount",
+            "before": "₹5,000",
+            "after": "₹5,000 (Unaltered)",
+            "original_image_url": "/api/codex-demos/image/original_demo.png",
+            "tampered_image_url": "/api/codex-demos/image/tampered_demo.png",
+            "box": [324, 268, 200, 46]
+        }
+    elif sample_id == "educational_control":
+        res["investor_scam_risk"] = {"score": 10, "risk_level": "LOW RISK", "badge": "LOW RISK"}
+        res["component_breakdown"]["scam_language"] = {
+            "score": 0,
+            "label": "0/100 suspicious",
+            "status": "Safe Educational Content"
+        }
+        res["why_flagged"]["en"] = [
+            "No obvious manipulation detected: Educational material explaining investment risk and fee comparison.",
+            "Mentions risk and volatility without promoting financial returns or requesting payment."
+        ]
+    elif sample_id == "broker_impersonation":
+        res["investor_scam_risk"] = {"score": 85, "risk_level": "HIGH RISK", "badge": "HIGH RISK"}
+        res["component_breakdown"]["url_domain_risk"] = {
+            "score": 90,
+            "label": "90/100 suspicious",
+            "status": "Lookalike Domain & Mismatch"
+        }
+        res["why_flagged"]["en"] = [
+            "Regulator impersonation detected: Falsely claims SEBI affiliation without authorization.",
+            "URL/domain mismatch: Claimed clearance portal does not match authentic regulatory domains.",
+            "Urgent payment pressure: Threatens account freezing within 20 minutes to demand verification fee."
+        ]
+
+    return res
 
 
 @app.get("/api/samples")

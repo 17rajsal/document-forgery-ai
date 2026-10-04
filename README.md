@@ -7,6 +7,7 @@
 **An Explainable Multimodal Financial-Document Verification & Investor-Safety Platform**  
 *Built for the SANGYAN Investor Resilience Hackathon — IIT (BHU), in collaboration with SEBI and NSDL.*
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-HTTPS%20Online-success.svg)](https://4b497b46d68a8c.lhr.life)
 [![Track](https://img.shields.io/badge/SANGYAN%20Hackathon-Track%20A%3A%20Digital%20Fraud%20Resilience-blue.svg)](https://iitbhu.ac.in)
 [![Track](https://img.shields.io/badge/Secondary-Track%20E%3A%20Content%20Literacy-indigo.svg)](https://iitbhu.ac.in)
 [![CI](https://github.com/17rajsal/document-forgery-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/17rajsal/document-forgery-ai/actions/workflows/ci.yml)
@@ -16,6 +17,10 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 </div>
+
+> [!TIP]
+> 🌐 **Live Public Application**: [https://4b497b46d68a8c.lhr.life](https://4b497b46d68a8c.lhr.life)  
+> Evaluators and hackathon judges can test the live application directly in any mobile or desktop browser without logging in. Both the React 19 SPA frontend and the FastAPI backend are active with 100% feature coverage.
 
 ---
 

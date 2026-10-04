@@ -30,8 +30,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY backend/requirements.txt ./backend/
 RUN pip install --no-cache-dir -r ./backend/requirements.txt
 
-# Copy backend code
+# Copy backend code, demo samples, models, scripts and infer module
 COPY backend/ ./backend/
+COPY demo_samples/ ./demo_samples/
+COPY models/ ./models/
+COPY scripts/ ./scripts/
+COPY infer.py ./infer.py
 
 # Copy built frontend assets from stage 1
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist

@@ -9,6 +9,8 @@ from unittest.mock import patch
 import numpy as np
 from PIL import Image
 from pydantic import ValidationError
+import sys
+sys.path.insert(0, str(Path(__file__).parent))
 from intelligence.schema import Finding, Claim, Evidence
 from intelligence.extraction import extract
 from intelligence.destinations import inspect, identities
