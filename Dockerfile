@@ -33,7 +33,7 @@ RUN pip install --no-cache-dir -r ./backend/requirements.txt
 # Copy backend code, demo samples, models, scripts and infer module
 COPY backend/ ./backend/
 COPY demo_samples/ ./demo_samples/
-COPY models/ ./models/
+RUN mkdir -p models
 COPY scripts/ ./scripts/
 COPY infer.py ./infer.py
 

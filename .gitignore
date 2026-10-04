@@ -21,7 +21,8 @@ frontend/dist/
 
 # ML datasets & checkpoints
 dataset/
-models/
+models/*
+!models/.gitkeep
 *.pkl
 *.pth
 *.pt
