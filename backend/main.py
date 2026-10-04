@@ -221,14 +221,22 @@ def load_document_as_image(file_path: str):
             pdf = pdfium.PdfDocument(file_path)
             if len(pdf) == 0:
                 raise ValueError("PDF contains 0 pages.")
+            total_pages = len(pdf)
             page = pdf[0]
-            # Render at 2.0x scale (144-200 DPI) for sharp OCR and forensic analysis
-            bitmap = page.render(scale=2.0)
+            # Adaptive scale for low-memory environments (Render Free tier 512MB RAM):
+            # Normal 72 DPI PDF (612x792) scales 2.0x -> ~1224x1584 px (clean OCR).
+            # High-resolution PDF canvas scales appropriately to not exceed 1600px max dimension.
+            page_w, page_h = page.get_size()
+            max_dim = max(page_w, page_h)
+            scale = min(2.0, max(1.0, 1600.0 / max_dim)) if max_dim > 0 else 1.5
+            bitmap = page.render(scale=scale)
             pil_image = bitmap.to_pil()
+            page.close()
+            pdf.close()
 
             rendered_image_path = file_path + "_page1.jpg"
-            pil_image.save(rendered_image_path, "JPEG", quality=95)
-            return pil_image, rendered_image_path, len(pdf), None
+            pil_image.save(rendered_image_path, "JPEG", quality=90)
+            return pil_image, rendered_image_path, total_pages, None
         except Exception as e:
             raise ValueError(f"Failed to parse PDF document: {str(e)}")
 
@@ -265,6 +273,8 @@ def load_document_as_image(file_path: str):
         try:
             pil_image = Image.open(file_path)
             pil_image.load()
+            if max(pil_image.width, pil_image.height) > 1800:
+                pil_image.thumbnail((1800, 1800), Image.Resampling.LANCZOS)
             return pil_image, file_path, 1, None
         except Exception as e:
             raise ValueError(f"Unsupported or corrupted image file: {str(e)}")
@@ -982,6 +992,9 @@ async def upload_document(
     except Exception as e:
         logger.error(f"Forensic pipeline error for upload {safe_basename}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Forensic pipeline error: {str(e)}")
+    finally:
+        import gc
+        gc.collect()
 
 # Additive Proofly v1 contract; preserves legacy routes for existing clients.
 from intelligence.api import router as intelligence_router, unversioned_router as intelligence_unversioned_router
