@@ -9,7 +9,8 @@
 
 [![Track](https://img.shields.io/badge/SANGYAN%20Hackathon-Track%20A%3A%20Digital%20Fraud%20Resilience-blue.svg)](https://iitbhu.ac.in)
 [![Track](https://img.shields.io/badge/Secondary-Track%20E%3A%20Content%20Literacy-indigo.svg)](https://iitbhu.ac.in)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%2B%20Python%203.11-009688.svg)](https://fastapi.tiangolo.com)
+[![CI](https://github.com/17rajsal/document-forgery-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/17rajsal/document-forgery-ai/actions/workflows/ci.yml)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%2B%20Python%203.12-009688.svg)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React%2019%20%2B%20TailwindCSS-61DAFB.svg)](https://react.dev)
 [![Docker](https://img.shields.io/badge/Deployment-Docker%20Multi--Stage-2496ED.svg)](https://docker.com)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
