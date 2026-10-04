@@ -2,6 +2,8 @@
 __pycache__/
 *.pyc
 .env
+.env.*
+!.env.example
 dataset/
 models/
 *.pkl
@@ -10,8 +12,8 @@ models/
 
 # Proofly local analysis artifacts (may contain extracted document text)
 backend/analysis_results/
-backend/uploads/[0-9a-f][0-9a-f]*_*
-backend/uploads/proofly_demo_*
+# Runtime uploads may contain personal documents; public fixtures live in demo_samples/.
+backend/uploads/
 outputs/test-tmp/
 outputs/proofly_synthetic/
 outputs/proofly_smoke/

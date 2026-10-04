@@ -175,7 +175,7 @@ export default function SampleDocuments({
                 Additional Preloaded Sample Documents
               </h3>
               <p className="text-xs text-slate-500 m-0">
-                Inspect general IDs, marksheets, and scanned forms
+                Inspect fictional demo documents; no real personal records
               </p>
             </div>
             <span className="text-xs font-mono text-slate-500">

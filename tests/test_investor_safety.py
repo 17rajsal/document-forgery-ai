@@ -7,6 +7,47 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from proofly.entity_verifier import verify_intermediary, validate_registration_format
 from proofly.text_url_analyzer import analyze_scam_language, analyze_url_domain, analyze_text_and_url_submission
 from proofly.demo_scenarios import DEMO_SCENARIOS, render_demo_canvas
+import tempfile
+from pathlib import Path
+from unittest.mock import patch
+
+
+class TestPublicSamplePrivacy(unittest.TestCase):
+    """Public demos must never enumerate or analyze private runtime uploads."""
+
+    def test_uploads_are_not_public_samples(self):
+        import main
+        with tempfile.TemporaryDirectory() as uploads:
+            Path(uploads, "private_upload.png").write_bytes(b"private runtime placeholder")
+            # Even a runtime file with a public demo name must not replace the demo.
+            Path(uploads, "educational_control.png").write_bytes(b"private runtime placeholder")
+            with patch.object(main, "UPLOAD_DIR", uploads):
+                samples = main.get_sample_documents()["samples"]
+                self.assertEqual({s["filename"] for s in samples}, set(main.PUBLIC_SAMPLE_DOCUMENTS))
+                self.assertTrue(all(s["is_demo"] and s["label"].startswith("DEMO:") for s in samples))
+                with patch.object(main, "process_document_pipeline", return_value={}) as analyze:
+                    main.analyze_sample("educational_control.png")
+                    analyze.assert_called_once_with(
+                        os.path.join(main.CODEX_IMAGES_DIR, "educational_control.png"),
+                        "educational_control.png",
+                    )
+
+    def test_nonpublic_and_traversal_names_are_rejected(self):
+        import main
+        for filename in ("private_upload.png", "../educational_control.png", "..\\educational_control.png", "unknown.png"):
+            with self.subTest(filename=filename), patch.object(main, "process_document_pipeline") as analyze:
+                with self.assertRaises(main.HTTPException) as error:
+                    main.analyze_sample(filename)
+                self.assertEqual(error.exception.status_code, 404)
+                analyze.assert_not_called()
+
+    def test_missing_demo_does_not_fall_back_to_uploads(self):
+        import main
+        with tempfile.TemporaryDirectory() as empty, patch.object(main, "CODEX_IMAGES_DIR", empty):
+            self.assertEqual(main.get_sample_documents(), {"samples": []})
+            with self.assertRaises(main.HTTPException) as error:
+                main.analyze_sample("educational_control.png")
+            self.assertEqual(error.exception.status_code, 404)
 
 
 class TestInvestorSafety(unittest.TestCase):

@@ -9,6 +9,16 @@ from PIL import Image, ImageDraw
 import docx
 
 BASE_URL = "http://127.0.0.1:8000"
+DEMO_IMAGE = os.path.join(os.path.dirname(__file__), "..", "demo_samples", "images", "educational_control.png")
+
+
+def synthetic_document_bytes(format):
+    """Convert the clearly labeled fictional fixture without writing personal data."""
+    with Image.open(DEMO_IMAGE) as source:
+        buf = io.BytesIO()
+        source.convert("RGB").save(buf, format=format)
+        return buf.getvalue()
+
 passed = 0
 failed = 0
 
@@ -136,25 +146,25 @@ except Exception as e:
 # 3. EXISTING SAMPLES FORENSIC EVALUATION
 # -------------------------------------------------------------
 try:
-    status, data = post_json("/api/analyze-sample/id.jpg")
+    status, data = post_json("/api/analyze-sample/educational_control.png")
     score = data.get("risk_score")
     auth_status = data.get("authenticity_status")
     conf = data.get("confidence_score")
     exp = bool(data.get("explanation"))
     lim = bool(data.get("limitations"))
-    log_test("Sample Analysis (id.jpg)", status == 200 and exp and lim, f"Score: {score}/100, Tier: {auth_status}, Conf: {conf}%")
+    log_test("Sample Analysis (educational_control.png)", status == 200 and exp and lim, f"Score: {score}/100, Tier: {auth_status}, Conf: {conf}%")
 except Exception as e:
-    log_test("Sample Analysis (id.jpg)", False, str(e))
+    log_test("Sample Analysis (educational_control.png)", False, str(e))
 
 try:
-    encoded = urllib.parse.quote("RAJ 12.pdf")
+    encoded = urllib.parse.quote("original_demo.png")
     status, data = post_json(f"/api/analyze-sample/{encoded}")
     score = data.get("risk_score")
     pages = data.get("total_pages")
     ocr_conf = data.get("ocr_confidence")
-    log_test("Sample Analysis PDF (RAJ 12.pdf)", status == 200 and pages == 1, f"Score: {score}/100, Pages: {pages}, OCR Conf: {ocr_conf}%")
+    log_test("Sample Analysis (original_demo.png)", status == 200 and pages == 1, f"Score: {score}/100, Pages: {pages}, OCR Conf: {ocr_conf}%")
 except Exception as e:
-    log_test("Sample Analysis PDF (RAJ 12.pdf)", False, str(e))
+    log_test("Sample Analysis (original_demo.png)", False, str(e))
 
 # -------------------------------------------------------------
 # 4. MULTI-FORMAT UPLOAD TESTS (7 COMMON FORMATS)
@@ -162,9 +172,7 @@ except Exception as e:
 
 # (A) JPEG
 try:
-    sample_path = os.path.join(os.path.dirname(__file__), "uploads", "1.jpg")
-    with open(sample_path, "rb") as f:
-        jpg_bytes = f.read()
+    jpg_bytes = synthetic_document_bytes("JPEG")
     status, data = post_multipart("/upload", "test_student.jpg", jpg_bytes, "image/jpeg")
     score = data.get("risk_score")
     status_tier = data.get("authenticity_status")
@@ -174,9 +182,7 @@ except Exception as e:
 
 # (B) PNG (Screenshot)
 try:
-    sample_path = os.path.join(os.path.dirname(__file__), "uploads", "Screenshot 2026-08-13 135707.png")
-    with open(sample_path, "rb") as f:
-        png_bytes = f.read()
+    png_bytes = synthetic_document_bytes("PNG")
     status, data = post_multipart("/upload", "screenshot.png", png_bytes, "image/png")
     is_shot = data.get("forgery_analysis", {}).get("image_analysis", {}).get("is_screenshot")
     log_test("Format: PNG Ingestion (Screenshot)", status == 200, f"Screenshot Heuristic: {is_shot}, Tier: {data.get('authenticity_status')}")
@@ -198,9 +204,7 @@ except Exception as e:
 
 # (D) PDF
 try:
-    sample_path = os.path.join(os.path.dirname(__file__), "uploads", "RAJ 12.pdf")
-    with open(sample_path, "rb") as f:
-        pdf_bytes = f.read()
+    pdf_bytes = synthetic_document_bytes("PDF")
     status, data = post_multipart("/upload", "document.pdf", pdf_bytes, "application/pdf")
     log_test("Format: PDF Ingestion", status == 200 and data.get("total_pages") == 1, f"Pages: {data.get('total_pages')}, Score: {data.get('risk_score')}")
 except Exception as e:
@@ -255,7 +259,7 @@ except Exception as e:
 # 5. FORENSIC INTELLIGENCE & 4-TIER CONTRACT CHECKS
 # -------------------------------------------------------------
 try:
-    status, data = post_json("/api/analyze-sample/id.jpg")
+    status, data = post_json("/api/analyze-sample/educational_control.png")
     required_keys = [
         "authenticity_status", "risk_score", "risk_level",
         "confidence_score", "verdict", "explanation",

@@ -711,6 +711,15 @@ CODEX_IMAGES_DIR = os.path.join(CODEX_DEMO_DIR, "images")
 CODEX_TEXT_DIR = os.path.join(CODEX_DEMO_DIR, "text")
 CODEX_META_DIR = os.path.join(CODEX_DEMO_DIR, "metadata")
 
+# Public samples are curated synthetic assets, never runtime user uploads.
+PUBLIC_SAMPLE_DOCUMENTS = {
+    "guaranteed_return.png": ("DEMO: Guaranteed-return scam", "Synthetic scam message"),
+    "broker_impersonation.png": ("DEMO: Broker impersonation", "Synthetic impersonation"),
+    "educational_control.png": ("DEMO: Investing education", "Synthetic educational control"),
+    "original_demo.png": ("DEMO: Original amount record", "Synthetic tampering baseline"),
+    "tampered_demo.png": ("DEMO: Altered amount record", "Synthetic tampering example"),
+}
+
 
 @app.get("/api/codex-demos")
 def get_codex_demos_api():
@@ -874,63 +883,35 @@ def analyze_codex_demo(sample_id: str):
 
 @app.get("/api/samples")
 def get_sample_documents():
-    """
-    Returns preloaded sample documents from uploads/ for instant testing in the UI.
-    Excludes temporary rendered files and non-document formats.
-    """
+    """List only the curated fictional documents shipped in demo_samples/."""
     samples = []
-    metadata_map = {
-        "1.jpg": {"label": "Student ID Card", "category": "ID"},
-        "id.jpg": {"label": "College ID (Bhagwan Parshuram)", "category": "ID"},
-        "adhar raj.jpg": {"label": "Aadhaar Card (Raj Salonia)", "category": "Government ID"},
-        "raj bank.jpg": {"label": "Bank Mandate Form", "category": "Banking"},
-        "10 result.jpg": {"label": "CBSE Marksheet (Class 10)", "category": "Academic"},
-        "RAJ 12.pdf": {"label": "Class 12 Certificate (PDF)", "category": "Academic PDF"},
-        "Screenshot 2026-08-13 135707.png": {"label": "Digital Document Screenshot", "category": "Digital Screenshot"},
-        "test.jpg": {"label": "Scanned Document", "category": "Generic"},
-    }
-
-    allowed_exts = tuple(SUPPORTED_EXTENSIONS)
-
-    if os.path.exists(UPLOAD_DIR):
-        for fname in os.listdir(UPLOAD_DIR):
-            if fname.startswith(".") or fname.endswith(("_page1.jpg", "_converted.jpg", "_docx_preview.jpg", ".tmp")):
-                continue
-            if not fname.lower().endswith(allowed_exts):
-                continue
-            full_path = os.path.join(UPLOAD_DIR, fname)
-            if os.path.isfile(full_path):
-                info = metadata_map.get(fname, {"label": fname, "category": "General"})
-                samples.append({
-                    "filename": fname,
-                    "label": info["label"],
-                    "category": info["category"],
-                    "size_bytes": os.path.getsize(full_path),
-                    "is_demo": True
-                })
-
+    for filename, (label, category) in PUBLIC_SAMPLE_DOCUMENTS.items():
+        full_path = os.path.join(CODEX_IMAGES_DIR, filename)
+        if os.path.isfile(full_path):
+            samples.append({
+                "filename": filename,
+                "label": label,
+                "category": category,
+                "size_bytes": os.path.getsize(full_path),
+                "is_demo": True,
+            })
     return {"samples": samples}
 
 
 @app.post("/api/analyze-sample/{filename}")
 def analyze_sample(filename: str):
-    """
-    Analyzes an existing sample document in uploads/ without requiring a re-upload.
-    """
-    safe_filename = os.path.basename(filename)
-    if not safe_filename or safe_filename.startswith("."):
-        raise HTTPException(status_code=400, detail="Invalid filename requested.")
-
-    file_path = os.path.join(UPLOAD_DIR, safe_filename)
-
-    if not os.path.exists(file_path) or not os.path.isfile(file_path):
-        raise HTTPException(status_code=404, detail=f"Sample document '{safe_filename}' not found.")
+    """Analyze a curated synthetic sample, never a file from user uploads."""
+    if filename not in PUBLIC_SAMPLE_DOCUMENTS:
+        raise HTTPException(status_code=404, detail="Sample document not found.")
+    file_path = os.path.join(CODEX_IMAGES_DIR, filename)
+    if not os.path.isfile(file_path):
+        raise HTTPException(status_code=404, detail="Sample document not found.")
 
     try:
-        result = process_document_pipeline(file_path, safe_filename)
+        result = process_document_pipeline(file_path, filename)
         return result
     except Exception as e:
-        logger.error(f"Pipeline error for sample {safe_filename}: {e}", exc_info=True)
+        logger.error(f"Pipeline error for sample {filename}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Forensic pipeline error: {str(e)}")
 
 

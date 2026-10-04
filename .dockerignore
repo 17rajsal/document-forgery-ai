@@ -1,0 +1,7 @@
+# Keep local user documents and extracted reports out of deployment images.
+backend/uploads/
+backend/analysis_results/
+.env
+.env.*
+!.env.example
+.git/

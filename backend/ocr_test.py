@@ -1,13 +1,14 @@
 import cv2
 import pytesseract
 import re
+from pathlib import Path
 
 pytesseract.pytesseract.tesseract_cmd = (
     r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 )
 
 # Read image
-image = cv2.imread("uploads/test.jpg")
+image = cv2.imread(str(Path(__file__).resolve().parents[1] / "demo_samples/images/educational_control.png"))
 
 # Resize
 image = cv2.resize(
