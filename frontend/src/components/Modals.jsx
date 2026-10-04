@@ -36,7 +36,7 @@ export default function Modals({
             {activeModal === 'settings' && <Settings className="h-5 w-5 text-blue-600" />}
             <h3 className="text-base font-bold text-slate-900 m-0">
               {activeModal === 'formats' && 'Supported Document Formats'}
-              {activeModal === 'how-it-works' && 'How DocShield AI Works'}
+              {activeModal === 'how-it-works' && 'How Proofly Investor Works'}
               {activeModal === 'history' && 'Analysis Session History'}
               {activeModal === 'settings' && 'System Configuration'}
             </h3>
@@ -56,7 +56,7 @@ export default function Modals({
           {activeModal === 'formats' && (
             <div className="space-y-4">
               <p className="text-slate-600 m-0">
-                DocShield AI employs strict magic-byte binary header validation to ensure uploaded documents match their claimed extensions. Executables, scripts, and spoofed extensions are automatically rejected.
+                Proofly Investor employs strict magic-byte binary header validation to ensure uploaded documents match their claimed extensions. Executables, scripts, and spoofed extensions are automatically rejected.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -82,39 +82,49 @@ export default function Modals({
             </div>
           )}
 
-          {/* 2. HOW IT WORKS */}
+          {/* 2. HOW IT WORKS / PROOFLY PHILOSOPHY */}
           {activeModal === 'how-it-works' && (
             <div className="space-y-4">
-              <p className="text-slate-600 m-0">
-                DocShield AI leverages a multi-layer forensic ensemble combining computer vision, statistical noise modeling, and neural optical character recognition:
-              </p>
+              <div className="p-4 rounded-xl bg-blue-50/60 border border-blue-200 text-blue-950 space-y-1">
+                <span className="font-bold text-xs uppercase tracking-wider text-blue-700 block">Product Philosophy</span>
+                <p className="text-xs leading-relaxed italic m-0 font-medium">
+                  "Proofly does not ask users to trust AI. It shows them the evidence that made a document worth questioning."
+                </p>
+              </div>
 
               <div className="space-y-3">
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="font-bold text-blue-700 block mb-1">1. Error Level Analysis (ELA)</span>
+                  <span className="font-bold text-blue-700 block mb-1">1. Generative AI Erase & Inpainting Detection</span>
                   <p className="text-slate-500 m-0">
-                    Recompresses document at a 90% quality baseline and evaluates pixel delta. Spatial grid variance is computed to distinguish uniform recompression (WhatsApp, social media resaves) from localized tampering.
+                    Scans for localized high-frequency noise residual suppression, DCT energy decay, and gradient boundary breaks typical of AI object removal and generative fill.
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="font-bold text-indigo-700 block mb-1">2. Sensor Noise Variance</span>
+                  <span className="font-bold text-indigo-700 block mb-1">2. Critical Financial Field & Semantic Audit</span>
                   <p className="text-slate-500 m-0">
-                    Calculates block-level Gaussian sensor noise. Digitally inserted elements or spliced signatures exhibit anomalous variance deviating by &gt;2.5σ from median background grain.
+                    Detects altered monetary amounts (₹), return percentages, and flags semantic contradictions between written verbal words (e.g. "ten thousand") and numeric figures (₹90,000).
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="font-bold text-violet-700 block mb-1">3. ORB Copy-Move Detection</span>
+                  <span className="font-bold text-amber-700 block mb-1">3. Regulatory Reality & Scam Language</span>
                   <p className="text-slate-500 m-0">
-                    Identifies cloned visual regions, repeated official stamps, or duplicated serial numbers using rotation-invariant keypoint matching.
+                    Identifies statutorily prohibited promises (guaranteed returns under SEBI regulations), false authority endorsements ("SEBI approved"), and artificial countdowns.
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                  <span className="font-bold text-emerald-700 block mb-1">4. Mathematical Checksum Verification</span>
+                  <span className="font-bold text-rose-700 block mb-1">4. Zero-Click QR & Identity Consistency</span>
                   <p className="text-slate-500 m-0">
-                    Applies mathematical dihedral group D5 Verhoeff checksums for Aadhaar IDs and ISO 7064 format verification for GSTIN taxpayer numbers.
+                    Decodes QR codes to uncover direct money redirects to personal UPI IDs, flags lookalike domains, and exposes corporate entities using generic public emails.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950">
+                  <span className="font-bold text-xs uppercase tracking-wider text-emerald-800 block mb-1">Strict Guardrail Compliance</span>
+                  <p className="text-[11px] leading-relaxed text-emerald-800 m-0">
+                    Proofly never gives stock tips, buy/sell recommendations, price predictions, or guaranteed legal fraud verdicts. It empowers first-time and Tier-2/3 investors to make safer decisions before sending funds.
                   </p>
                 </div>
               </div>

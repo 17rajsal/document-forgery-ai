@@ -8,8 +8,8 @@ import {
   HelpCircle,
   Settings,
   Lock,
-  ExternalLink,
-  CheckCircle2,
+  Sparkles,
+  AlertTriangle,
   X
 } from 'lucide-react';
 
@@ -19,15 +19,17 @@ export default function Sidebar({
   historyCount = 0,
   backendStatus,
   onNewAnalysis,
+  onOpenDemoSection,
   mobileOpen,
   setMobileOpen
 }) {
   const navItems = [
     { id: 'new-analysis', label: 'New Analysis', icon: FilePlus, action: onNewAnalysis },
-    { id: 'history', label: 'Analysis History', icon: History, count: historyCount },
+    { id: 'demos', label: 'SANGYAN Demos', icon: Sparkles, badge: 'Kavita Case', action: onOpenDemoSection },
     { id: 'samples', label: 'Sample Documents', icon: FolderOpen },
+    { id: 'history', label: 'Analysis History', icon: History, count: historyCount },
     { id: 'formats', label: 'Supported Formats', icon: FileCode },
-    { id: 'how-it-works', label: 'How It Works', icon: HelpCircle },
+    { id: 'how-it-works', label: 'Philosophy & Rules', icon: HelpCircle },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
@@ -63,13 +65,13 @@ export default function Sidebar({
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-base tracking-tight text-slate-900">DocShield</span>
-                <span className="text-xs font-semibold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100">
-                  AI
+                <span className="font-black text-base tracking-tight text-slate-900">Proofly</span>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100">
+                  Investor
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 font-medium truncate max-w-[130px]">
-                Document Authenticity
+                Verify before you trust.
               </p>
             </div>
           </div>
@@ -116,6 +118,11 @@ export default function Sidebar({
                   <Icon className={`h-4 w-4 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
                 </div>
+                {item.badge && (
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800">
+                    {item.badge}
+                  </span>
+                )}
                 {item.count !== undefined && item.count > 0 && (
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600">
                     {item.count}
@@ -128,31 +135,22 @@ export default function Sidebar({
 
         {/* Backend & Security Status Box */}
         <div className="p-4 border-t border-slate-100 space-y-3">
-          {/* Backend Status indicator */}
-          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center justify-between text-[11px]">
-            <span className="text-slate-500 font-medium">Core Service</span>
-            <div className="flex items-center gap-1.5">
-              <span
-                className={`h-2 w-2 rounded-full ${
-                  backendStatus?.status === 'HEALTHY'
-                    ? 'bg-emerald-500 animate-pulse'
-                    : 'bg-rose-500'
-                }`}
-              />
-              <span className="font-semibold text-slate-700">
-                {backendStatus?.status === 'HEALTHY' ? 'Online (v2.1)' : 'Offline'}
-              </span>
-            </div>
+          {/* SANGYAN Hackathon Track Pill */}
+          <div className="p-2.5 rounded-xl bg-blue-50/60 border border-blue-200/60 text-[11px] space-y-1">
+            <span className="font-bold text-blue-900 block">SANGYAN Hackathon</span>
+            <p className="text-[10px] text-blue-700 m-0 leading-tight">
+              Track A: Digital Fraud & Scam Resilience
+            </p>
           </div>
 
           {/* Privacy & Zero-Retention Note */}
-          <div className="p-3 rounded-xl bg-blue-50/50 border border-blue-100/80 text-[11px] text-slate-600 space-y-1">
-            <div className="flex items-center gap-1.5 font-semibold text-blue-900">
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 space-y-1">
+            <div className="flex items-center gap-1.5 font-semibold text-slate-800">
               <Lock className="h-3.5 w-3.5 text-blue-600" />
-              <span>Zero Data Retention</span>
+              <span>Privacy By Design</span>
             </div>
             <p className="text-[10px] text-slate-500 leading-relaxed m-0">
-              Documents are processed in ephemeral memory and discarded immediately. No data is stored or publicly exposed.
+              No permanent storage, no OTP/SMS collection. Ephemeral in-memory forensic verification.
             </p>
           </div>
         </div>

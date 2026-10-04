@@ -33,6 +33,37 @@ SUSPICIOUS_TLDS = {
 URL_SHORTENERS = {"bit.ly", "tinyurl.com", "cutt.ly", "rb.gy", "is.gd", "t.me", "wa.me"}
 
 
+def detect_lookalike_domain(domain: str) -> Dict[str, Any]:
+    """
+    Checks if a domain is a lookalike/typosquat targeting Indian financial or regulatory bodies.
+    """
+    domain = (domain or "").lower().strip()
+    for trusted_dom, name in TRUSTED_FINANCIAL_DOMAINS.items():
+        base_keyword = trusted_dom.split(".")[0]
+        if base_keyword in domain and domain != trusted_dom and not domain.endswith("." + trusted_dom):
+            return {
+                "is_lookalike": True,
+                "target_entity": f"{name} ({trusted_dom})",
+                "trusted_domain": trusted_dom
+            }
+    major_targets = {
+        "sbi": "State Bank of India (sbi.co.in)",
+        "hdfc": "HDFC Bank (hdfcbank.com)",
+        "icici": "ICICI Bank (icicibank.com)",
+        "zerodha": "Zerodha (zerodha.com)",
+        "groww": "Groww (groww.in)",
+        "nsdl": "NSDL (nsdl.co.in)"
+    }
+    for kw, label in major_targets.items():
+        if kw in domain and not any(trusted in domain for trusted in ["sbi.co.in", "hdfcbank.com", "icicibank.com", "zerodha.com", "groww.in", "nsdl.co.in"]):
+            return {
+                "is_lookalike": True,
+                "target_entity": label,
+                "trusted_domain": kw
+            }
+    return {"is_lookalike": False, "target_entity": None}
+
+
 def parse_upi_uri(uri: str) -> Dict[str, Any]:
     """
     Parses a UPI payment link (e.g. upi://pay?pa=recipient@upi&pn=RecipientName&am=25000&cu=INR)

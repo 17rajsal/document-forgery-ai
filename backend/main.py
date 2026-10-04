@@ -3,6 +3,7 @@ import shutil
 import uuid
 import logging
 from typing import Optional, List, Dict, Any, Tuple
+from pydantic import BaseModel
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -519,6 +520,10 @@ def process_document_pipeline(file_path: str, original_filename: str, analysis_i
             "visual_evidence_map": proofly_dossier.get("visual_evidence_map", []),
             "analysis_id": analysis_id,
             "document_id": analysis_id,
+            "investor_scam_risk": proofly_dossier.get("investor_scam_risk", {}),
+            "component_breakdown": proofly_dossier.get("component_breakdown", {}),
+            "why_flagged": proofly_dossier.get("why_flagged", {}),
+            "entity_verification": proofly_dossier.get("entity_verification", {}),
         }
 
         def sanitize_for_json(obj):
@@ -603,15 +608,60 @@ def health_check():
     tess_available = os.path.exists(pytesseract.pytesseract.tesseract_cmd)
     return {
         "status": "HEALTHY",
-        "product": "Proofly",
-        "tagline": "See beyond what looks legit.",
-        "hackathon": "SANGYAN Investor Resilience Hackathon",
+        "product": "Proofly Investor",
+        "tagline": "Verify before you trust.",
+        "hackathon": "SANGYAN Hackathon — IIT (BHU) × SEBI × NSDL",
+        "tracks": ["Track A — Digital Fraud & Scam Resilience", "Track E — Misinformation & Content Literacy"],
+
         "ocr_available": tess_available,
         "tesseract_path": pytesseract.pytesseract.tesseract_cmd,
         "upload_dir_configured": bool(UPLOAD_DIR),
         "supported_formats": ["JPG", "JPEG", "PNG", "WEBP", "PDF", "TIFF", "BMP", "DOCX"],
         "max_file_size_mb": MAX_FILE_SIZE_BYTES // (1024 * 1024)
     }
+
+
+class TextAnalysisRequest(BaseModel):
+    text: Optional[str] = None
+    url: Optional[str] = None
+    claimed_org: Optional[str] = None
+    claimed_reg_no: Optional[str] = None
+    language: Optional[str] = "en"
+
+
+class EntityVerificationRequest(BaseModel):
+    claimed_entity: Optional[str] = None
+    registration_number: Optional[str] = None
+    claimed_url: Optional[str] = None
+
+
+@app.post("/api/analyze-text")
+def api_analyze_text(req: TextAnalysisRequest):
+    """
+    Direct analysis of pasted text messages (WhatsApp, Telegram, SMS),
+    suspicious URLs, and investment proposals.
+    """
+    from proofly.text_url_analyzer import analyze_text_and_url_submission
+    return analyze_text_and_url_submission(
+        text=req.text,
+        url=req.url,
+        claimed_org=req.claimed_org,
+        claimed_reg_no=req.claimed_reg_no
+    )
+
+
+@app.post("/api/verify-entity")
+def api_verify_entity(req: EntityVerificationRequest):
+    """
+    Verifies claimed SEBI / NSDL / AMFI intermediary registration,
+    matching against official formats and regulated directory mirror.
+    """
+    from proofly.entity_verifier import verify_intermediary
+    return verify_intermediary(
+        claimed_entity=req.claimed_entity,
+        registration_number=req.registration_number,
+        claimed_url=req.claimed_url
+    )
 
 
 @app.get("/api/proofly/demo-scenarios")

@@ -4,42 +4,54 @@ import {
   Cpu,
   Search,
   Lock,
-  ArrowRight
+  ArrowRight,
+  QrCode,
+  ShieldAlert,
+  Sparkles,
+  Landmark
 } from 'lucide-react';
 
-export default function FeatureCards({ onOpenFormats, onOpenHowItWorks }) {
+export default function FeatureCards({ onOpenFormats, onOpenHowItWorks, language = 'en' }) {
   const features = [
     {
-      title: 'Multi-Format Support',
-      desc: 'Ingests PDF, DOCX, TIFF, BMP, WEBP, PNG, and JPEG with strict binary magic-byte verification.',
-      icon: Layers,
-      accent: 'blue',
-      badge: '7 Formats',
-      action: onOpenFormats
-    },
-    {
-      title: 'AI Forensic Engine',
-      desc: 'Combines spatial ELA compression delta, noise variance splicing, and ORB copy-move duplication detection.',
+      title: language === 'hi' ? 'Multimodal Forensics' : 'Multimodal Forensics',
+      desc: language === 'hi'
+        ? 'ELA compression, noise variance aur AI Inpainting / Erase detection ek sath.'
+        : 'Error Level Analysis (ELA), high-frequency noise residuals, and generative AI inpainting detection.',
       icon: Cpu,
+      accent: 'blue',
+      badge: 'Vision AI',
+      action: onOpenHowItWorks
+    },
+    {
+      title: language === 'hi' ? 'Critical Financial Fields' : 'Critical Field Tampering',
+      desc: language === 'hi'
+        ? 'Rakam (₹), tareekh, aur ankon vs shabdon ka semantic mismatch check karta hai.'
+        : 'Detects edited amounts (₹), return rates, and verbal-vs-numeric contradictions.',
+      icon: Landmark,
       accent: 'indigo',
-      badge: '4-Tier Risk',
+      badge: 'Field Audit',
       action: onOpenHowItWorks
     },
     {
-      title: 'Tri-Pass Adaptive OCR',
-      desc: 'Multi-variant neural OCR (contrast, Otsu binarization, adaptive Gaussian) with word-level confidence and bounding boxes.',
-      icon: Search,
+      title: language === 'hi' ? 'Daawe aur Scam Language' : 'Claims & Scam Language',
+      desc: language === 'hi'
+        ? 'Guaranteed 30% return aur jhoothe SEBI approval ke daawon ko pakadta hai.'
+        : 'Flags statutory violations like guaranteed returns, fake SEBI endorsements, and FOMO urgency.',
+      icon: ShieldAlert,
       accent: 'violet',
-      badge: 'Multi-Pass',
+      badge: 'SEBI/RBI Rules',
       action: onOpenHowItWorks
     },
     {
-      title: 'Enterprise Security',
-      desc: 'In-memory processing with automatic transient raster cleanup. Zero public exposure and zero data retention.',
-      icon: Lock,
+      title: language === 'hi' ? 'QR Code & Payment Audit' : 'QR & Payment Inspection',
+      desc: language === 'hi'
+        ? 'QR code decode karke personal UPI handle aur fake websites ko expose karta hai.'
+        : 'Decodes QR codes to flag personal UPI accounts and typosquatting regulatory domains.',
+      icon: QrCode,
       accent: 'slate',
-      badge: 'SOC2-Ready',
-      action: null
+      badge: 'Zero-Click QR',
+      action: onOpenHowItWorks
     }
   ];
 
@@ -79,7 +91,7 @@ export default function FeatureCards({ onOpenFormats, onOpenHowItWorks }) {
 
             {f.action && (
               <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-blue-600 font-medium group-hover:text-blue-700">
-                <span>Learn more</span>
+                <span>{language === 'hi' ? 'Aur janein' : 'View details'}</span>
                 <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
               </div>
             )}

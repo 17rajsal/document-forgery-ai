@@ -9,6 +9,91 @@ from typing import Dict, Any, List
 
 
 DEMO_SCENARIOS = {
+    "sebi_nsdl_50k_80k_certificate": {
+        "id": "sebi_nsdl_50k_80k_certificate",
+        "title": "DEMO SAMPLE: Guaranteed 30-Day Certificate (₹50k to ₹80k)",
+        "category": "High-Yield Scam (SEBI/NSDL Impersonation)",
+        "filename": "DEMO_SAMPLE_Guaranteed_Return_Certificate.jpg",
+        "document_type": "Priority Investment Certificate",
+        "persona": "Retail Investor targeted with fake SEBI/NSDL guaranteed profit scheme",
+        "claimed_entity": "Apex Growth Asset Management (SEBI / NSDL Authorized)",
+        "preview_badge": "HIGH RISK (Demo Sample)",
+        "sample_text": (
+            "[DEMO SAMPLE - NOT AN OFFICIAL INSTITUTIONAL DOCUMENT]\n"
+            "APEX GROWTH ASSET MANAGEMENT\n"
+            "Priority Allotment & Assured Return Certificate\n"
+            "Investor Name: Smt. Sunita Devi | Allotment ID: APX-9921\n"
+            "Investment Amount: ₹50,000.00\n"
+            "Guaranteed Return: Receive ₹80,000 within 30 days (60% Assured Profit)\n"
+            "Status: SEBI & NSDL approved priority quota allotment.\n"
+            "Claimed SEBI Registration: INZ999888777 (Unverified)\n"
+            "Act now! Only 3 priority allotment slots remaining today.\n"
+            "Pay ₹50,000 immediately to lock allocation before window expires.\n"
+            "Scan QR code below or pay via UPI: vikram.personal88@okaxis\n"
+            "Payee Name: Vikram Malhotra | Account: 998877665544\n"
+            "Support: verify@sebi-investor-portal.xyz | Call: +91 9123456780\n"
+            "[DEMO SAMPLE - SANGYAN INVESTOR RESILIENCE HACKATHON]"
+        ),
+        "qr_mock": {
+            "is_upi": True,
+            "raw_content": "upi://pay?pa=vikram.personal88@okaxis&pn=VikramMalhotra&am=50000&cu=INR",
+            "bbox": {"x": 680, "y": 920, "w": 260, "h": 260},
+            "upi_details": {
+                "payee_address": "vikram.personal88@okaxis",
+                "payee_name": "Vikram Malhotra",
+                "amount": "50000",
+                "is_personal_handle": True
+            }
+        },
+        "critical_fields_mock": [
+            {
+                "field_type": "MONETARY_AMOUNT",
+                "raw_text": "₹50,000.00",
+                "bbox": {"x": 380, "y": 420, "w": 180, "h": 40},
+                "tamper_concern": "HIGH",
+                "finding": "Amount field exhibits sharp gradient discontinuity and local compression variance"
+            },
+            {
+                "field_type": "RETURN_PERCENTAGE",
+                "raw_text": "Receive ₹80,000 within 30 days (60% Assured Profit)",
+                "bbox": {"x": 120, "y": 480, "w": 520, "h": 40},
+                "tamper_concern": "HIGH",
+                "finding": "Prohibited guaranteed yield claim directly contradicting SEBI IA Regulations"
+            }
+        ],
+        "claims_mock": [
+            {
+                "claim_id": "c_g1",
+                "exact_text": "Receive ₹80,000 within 30 days (60% Assured Profit)",
+                "category": "GUARANTEED_RETURN_CLAIMS",
+                "severity": "CRITICAL",
+                "title": "Unrealistic Guaranteed Return Claim",
+                "bbox": {"x": 120, "y": 480, "w": 520, "h": 40}
+            },
+            {
+                "claim_id": "c_r1",
+                "exact_text": "SEBI & NSDL approved priority quota allotment",
+                "category": "REGULATOR_AUTHORITY_CLAIMS",
+                "severity": "CRITICAL",
+                "title": "False Statutory Regulator Endorsement",
+                "bbox": {"x": 120, "y": 540, "w": 460, "h": 36}
+            },
+            {
+                "claim_id": "c_u1",
+                "exact_text": "Act now! Only 3 priority allotment slots remaining today",
+                "category": "URGENCY_FOMO",
+                "severity": "HIGH",
+                "title": "Urgency / FOMO Pressure Tactic",
+                "bbox": {"x": 120, "y": 660, "w": 480, "h": 36}
+            }
+        ],
+        "identity_mock": {
+            "claimed": "Apex Growth Asset Management",
+            "email": "verify@sebi-investor-portal.xyz",
+            "upi_payee": "vikram.personal88@okaxis (Vikram Malhotra)",
+            "registration": "INZ999888777"
+        }
+    },
     "kavita_whatsapp_scam": {
         "id": "kavita_whatsapp_scam",
         "title": "Kavita's Case: WhatsApp Pre-IPO Scam PDF",
@@ -252,7 +337,7 @@ def render_demo_canvas(demo_id: str, output_path: str):
         footer_font = title_font
 
     # Top brand bar
-    if demo_id == "kavita_whatsapp_scam":
+    if demo_id in ("sebi_nsdl_50k_80k_certificate", "kavita_whatsapp_scam"):
         banner_color = (220, 38, 38)
     elif demo_id == "traditional_altered_bank_slip":
         banner_color = (30, 58, 138)
@@ -262,6 +347,10 @@ def render_demo_canvas(demo_id: str, output_path: str):
         banner_color = (37, 99, 235)
 
     draw.rectangle([(0, 0), (width, 16)], fill=banner_color)
+
+    # Demo Benchmark Safety Watermark Badge
+    draw.rectangle([(width - 340, 24), (width - 60, 56)], fill=(254, 226, 226), outline=(239, 68, 68), width=1)
+    draw.text((width - 325, 31), "DEMO SAMPLE / SANGYAN HACKATHON", fill=(185, 28, 28), font=footer_font)
 
     # Document Header
     y = 60

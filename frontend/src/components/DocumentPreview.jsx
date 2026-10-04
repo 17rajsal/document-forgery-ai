@@ -7,7 +7,12 @@ import {
   Eye,
   Layers,
   Sparkles,
-  Maximize2
+  Maximize2,
+  MessageSquare,
+  Globe,
+  AlertTriangle,
+  ShieldAlert,
+  Link
 } from 'lucide-react';
 
 export default function DocumentPreview({
@@ -18,13 +23,18 @@ export default function DocumentPreview({
   ocrWords = [],
   totalPages = 1,
   showOcrBoxes,
-  setShowOcrBoxes
+  setShowOcrBoxes,
+  analysisResult
 }) {
   const [zoomLevel, setZoomLevel] = useState(1);
 
   const handleZoomIn = () => setZoomLevel((prev) => Math.min(2.5, prev + 0.2));
   const handleZoomOut = () => setZoomLevel((prev) => Math.max(0.6, prev - 0.2));
   const handleResetZoom = () => setZoomLevel(1);
+
+  const isTextMode = analysisResult?.mode === 'TEXT_URL_ANALYSIS';
+  const scamIndicators = analysisResult?.scam_indicators || [];
+  const urlAnalysis = analysisResult?.url_analysis || {};
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 flex flex-col justify-between h-full">
@@ -37,7 +47,7 @@ export default function DocumentPreview({
             </div>
             <div>
               <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider m-0">
-                Document Preview
+                {isTextMode ? 'Message & Link Inspection' : 'Document Preview'}
               </h2>
               {filename && (
                 <p className="text-[11px] text-slate-500 font-mono truncate max-w-[200px] m-0">
@@ -47,8 +57,8 @@ export default function DocumentPreview({
             </div>
           </div>
 
-          {/* Zoom Controls */}
-          {previewImage && (
+          {/* Zoom Controls (Document Mode) */}
+          {previewImage && !isTextMode && (
             <div className="flex items-center gap-2">
               <label className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-600 cursor-pointer select-none mr-1">
                 <input
@@ -92,7 +102,57 @@ export default function DocumentPreview({
 
         {/* PREVIEW CONTAINER */}
         <div className="relative rounded-xl bg-slate-50/80 border border-slate-200/80 overflow-auto min-h-[280px] max-h-[440px] flex items-center justify-center p-4">
-          {previewImage ? (
+          {isTextMode ? (
+            /* TEXT / LINK ANALYSIS PREVIEW */
+            <div className="w-full space-y-3">
+              {/* Message Box */}
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                    <MessageSquare className="h-3 w-3 text-blue-600" />
+                    Incoming Investment Communication
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold">
+                    {scamIndicators.length} Triggers
+                  </span>
+                </div>
+                <p className="text-xs text-slate-800 leading-relaxed font-sans m-0">
+                  {analysisResult.text_preview || analysisResult.extracted_text || 'Text analysis payload'}
+                </p>
+              </div>
+
+              {/* URL / Link Card if available */}
+              {urlAnalysis.url && (
+                <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                      <Globe className="h-3 w-3 text-indigo-600" />
+                      Attached Website Link
+                    </span>
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase ${
+                      urlAnalysis.level === 'HIGH' ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'
+                    }`}>
+                      {urlAnalysis.level} Risk Link
+                    </span>
+                  </div>
+                  <div className="text-xs font-mono font-semibold text-slate-900 truncate">
+                    {urlAnalysis.url}
+                  </div>
+                  {urlAnalysis.concerns && urlAnalysis.concerns.length > 0 && (
+                    <div className="space-y-1 mt-1">
+                      {urlAnalysis.concerns.map((c, i) => (
+                        <div key={i} className="text-[10px] text-rose-600 flex items-start gap-1">
+                          <AlertTriangle className="h-3 w-3 shrink-0 mt-0.5" />
+                          <span>{c}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ) : previewImage ? (
+            /* IMAGE PREVIEW */
             <div
               className="transition-transform duration-200 origin-center relative inline-block"
               style={{ transform: `scale(${zoomLevel})` }}
@@ -142,11 +202,11 @@ export default function DocumentPreview({
       </div>
 
       {/* FOOTER BADGES */}
-      {previewImage && (
+      {(previewImage || isTextMode) && (
         <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 font-mono">
           <div className="flex items-center gap-1.5">
             <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold">
-              {documentType || 'General Document'}
+              {isTextMode ? 'Direct Message / URL' : (documentType || 'General Document')}
             </span>
             {totalPages > 1 && (
               <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600">
@@ -155,7 +215,7 @@ export default function DocumentPreview({
             )}
           </div>
 
-          {imageProps && (
+          {imageProps && !isTextMode && (
             <span className="text-slate-400">
               {imageProps.width} × {imageProps.height} px • {imageProps.format || 'RASTER'}
             </span>

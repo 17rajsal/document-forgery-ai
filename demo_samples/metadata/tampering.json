@@ -1,0 +1,45 @@
+{
+  "sample_id": "document_tampering",
+  "title": "Synthetic amount replacement pair",
+  "disclaimer": "DEMO SAMPLE — NOT A REAL FINANCIAL DOCUMENT",
+  "expected_risk": "medium",
+  "expectation_type": "QA/demo expectations only — not production AI results",
+  "expected_findings": [
+    "Localized amount replacement",
+    "Different font weight, size, baseline, and background within patch"
+  ],
+  "expected_ocr_fields": {
+    "original_investment_amount_inr": 5000,
+    "tampered_investment_amount_inr": 50000
+  },
+  "expected_scam_signals": [],
+  "original_path": "images/original_demo.png",
+  "tampered_path": "images/tampered_demo.png",
+  "change": {
+    "field": "Investment Amount",
+    "before": "₹5,000",
+    "after": "₹50,000",
+    "bounding_box_xyxy": [
+      324,
+      268,
+      524,
+      314
+    ],
+    "coordinate_convention": "pixels from top left; right and bottom exclusive",
+    "image_dimensions": [
+      1800,
+      1100
+    ],
+    "visual_changes": [
+      "29px regular to 31px bold",
+      "2px right/down offset",
+      "white to pale beige background",
+      "slightly lighter text"
+    ]
+  },
+  "notes": [
+    "The medium label represents a synthetic review fixture, not a calibrated fraud score.",
+    "This pair is for testing; the application may or may not detect the edit.",
+    "Only the declared patch differs; no real financial document is used."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "sample_id": "broker_impersonation",
+  "title": "Fictional CedarBridge broker verification alert",
+  "expected_risk": "high",
+  "expected_findings": [
+    "Claimed regulator affiliation without evidence",
+    "Regulator name in an unrelated domain",
+    "Threat of account freezing",
+    "Urgent verification fee request",
+    "Sender and website domains differ"
+  ],
+  "expected_ocr_fields": {
+    "sender": "Fictional CedarBridge Investor Clearance Desk",
+    "claimed_regulator": "SEBI",
+    "registration_id": "DEMO-BROKER-472910",
+    "requested_fee_inr": 2499,
+    "deadline_minutes": 20,
+    "url": "https://sebi-clearance.cedarbridge-check.example/verify",
+    "reply_address": "urgent-desk@cedarbridge-mail.example"
+  },
+  "expected_scam_signals": [
+    "regulator_impersonation",
+    "broker_impersonation",
+    "lookalike_domain",
+    "account_freeze_threat",
+    "urgent_payment_request",
+    "sender_domain_mismatch"
+  ],
+  "disclaimer": "DEMO SAMPLE — NOT A REAL FINANCIAL DOCUMENT",
+  "expectation_type": "QA/demo expectations only — not production AI results",
+  "notes": [
+    "All names and registration identifiers are fictional; .example domains are placeholders.",
+    "Expected risk is a fixture label, not an AI verdict or financial advice.",
+    "Assess context and negation; the educational control mentions risk and guarantees without promoting them."
+  ]
+}

@@ -15,6 +15,7 @@ Orchestrates the complete multimodal financial verification pipeline:
 """
 
 import os
+import re
 import uuid
 import datetime
 import hashlib
@@ -28,6 +29,7 @@ from .financial_field_analyzer import analyze_financial_fields
 from .claim_extractor import extract_claims_from_text
 from .evidence_checker import verify_claims_against_evidence
 from .identity_consistency import build_entity_graph
+from .entity_verifier import verify_intermediary
 from .fusion_engine import fuse_proofly_evidence
 from .plain_explainer import generate_plain_explanations
 
@@ -233,11 +235,120 @@ def run_proofly_pipeline(
         identity_res=identity_analysis
     )
 
+    # 11. Regulatory Entity & Registration Number Verification
+    reg_number = None
+    reg_match = re.search(r"\b(?:INZ\d{9}|INA\d{9}|INH\d{9}|INP\d{9}|IN-DP-\d{3}-\d{4}|ARN[- ]?\d{4,8})\b", extracted_text, re.I)
+    if reg_match:
+        reg_number = reg_match.group(0).strip()
+
+    entity_verification_res = verify_intermediary(
+        claimed_entity=claimed_entity,
+        registration_number=reg_number
+    )
+
+    # 12. Explainable 4-Component Investor Scam Risk Scoring
+    base_score = int(base_forgery_analysis.get("risk_score", 0))
+    doc_integrity_score = min(100, int(base_score * 0.6 + (35 if ai_inpainting_analysis.get("anomaly_detected") else 0) + (30 if financial_fields_analysis.get("has_tampered_fields") else 0)))
+
+    has_crit_claim = any(c.get("severity") == "CRITICAL" for c in claims_analysis)
+    has_high_claim = any(c.get("severity") == "HIGH" for c in claims_analysis)
+    scam_lang_score = 92 if has_crit_claim else 75 if has_high_claim else min(100, len(claims_analysis) * 25)
+
+    has_upi_personal = any(q.get("is_personal_upi") for q in qr_analysis)
+    has_lookalike_url = any(u.get("typosquatting_detected") for u in urls_analysis)
+    has_suspicious_tld = any(u.get("has_suspicious_tld") for u in urls_analysis)
+    if has_lookalike_url or has_upi_personal:
+        url_domain_risk_score = 85
+    elif has_suspicious_tld:
+        url_domain_risk_score = 65
+    elif urls_analysis or qr_analysis:
+        url_domain_risk_score = 25
+    else:
+        url_domain_risk_score = 5
+
+    entity_status = entity_verification_res.get("status", "UNABLE TO VERIFY")
+    entity_risk = 90 if entity_status == "NOT VERIFIED" else 50 if entity_status == "UNABLE TO VERIFY" and (claimed_entity or reg_number) else 5
+
+    active_weights = [(doc_integrity_score, 0.35), (scam_lang_score, 0.35)]
+    if urls_analysis or qr_analysis:
+        active_weights.append((url_domain_risk_score, 0.15))
+    if claimed_entity or reg_number:
+        active_weights.append((entity_risk, 0.15))
+
+    total_w = sum(w for _, w in active_weights)
+    overall_investor_risk = int(sum(s * w for s, w in active_weights) / total_w)
+
+    if has_crit_claim or has_upi_personal or entity_status == "NOT VERIFIED":
+        overall_investor_risk = max(overall_investor_risk, 87)
+
+    overall_tier = "HIGH RISK" if overall_investor_risk >= 65 else "MODERATE RISK" if overall_investor_risk >= 30 else "LOW RISK"
+
+    why_flagged_en = []
+    why_flagged_hi = []
+
+    if has_crit_claim:
+        why_flagged_en.append("Guaranteed-return language detected, directly violating SEBI Investment Adviser Regulations.")
+        why_flagged_hi.append("Guaranteed return ka daawa paya gaya jo SEBI niyamavali ke virudh hai.")
+    for tf in financial_fields_analysis.get("tampered_fields", []):
+        why_flagged_en.append(f"{tf.get('raw_text')} amount/date region exhibits sharpness disparity and visual inconsistency.")
+        why_flagged_hi.append(f"{tf.get('raw_text')} rashi/taareekh par local typography chhed-chhad ke sanket hain.")
+    if has_upi_personal:
+        why_flagged_en.append("QR destination routes funds to a personal UPI handle instead of an authorized corporate account.")
+        why_flagged_hi.append("QR code se payment vyaktigat UPI par ja raha hai, company account mein nahi.")
+    if entity_status == "NOT VERIFIED":
+        why_flagged_en.append(entity_verification_res.get("verdict", "Claimed registration number does not match entity."))
+        why_flagged_hi.append("Registration number match nahi hua ya kisi doosri company ka nikla.")
+    elif entity_status == "UNABLE TO VERIFY" and (claimed_entity or reg_number):
+        why_flagged_en.append("Registration number could not be independently corroborated in official public directory.")
+        why_flagged_hi.append("Registration number ki sarkari directory se pushti nahi ho saki.")
+    if has_lookalike_url:
+        why_flagged_en.append("Link domain mimics an authentic financial institution (lookalike / typosquat).")
+        why_flagged_hi.append("Link kisi asli bank ya regulator jaisi nakli website ka hai.")
+
+    if not why_flagged_en:
+        why_flagged_en.append("No obvious digital manipulation, scam promises, or payment redirects detected.")
+        why_flagged_hi.append("Is document mein koi spasht chhed-chhad ya dhokhadhadi ke sanket nahi paye gaye.")
+
     # Structured Proofly Output Dossier
     proofly_dossier = {
         "proofly_version": "1.0.0",
         "timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "file_hash_sha256": sha256_hash,
+        "investor_scam_risk": {
+            "score": overall_investor_risk,
+            "risk_level": overall_tier,
+            "badge": overall_tier
+        },
+        "component_breakdown": {
+            "document_integrity": {
+                "score": doc_integrity_score,
+                "label": f"{doc_integrity_score}/100 suspicious",
+                "status": "High Anomaly" if doc_integrity_score >= 60 else "Moderate" if doc_integrity_score >= 25 else "Clean"
+            },
+            "scam_language": {
+                "score": scam_lang_score,
+                "label": f"{scam_lang_score}/100 suspicious",
+                "status": "High Risk" if scam_lang_score >= 60 else "Moderate" if scam_lang_score >= 25 else "Clean",
+                "claims_count": len(claims_analysis)
+            },
+            "url_domain_risk": {
+                "score": url_domain_risk_score,
+                "label": f"{url_domain_risk_score}/100 suspicious" if (urls_analysis or qr_analysis) else "Not Found",
+                "status": "High Risk" if url_domain_risk_score >= 60 else "Moderate" if url_domain_risk_score >= 25 else "Safe",
+                "has_personal_upi": has_upi_personal
+            },
+            "entity_verification": {
+                "status": entity_status,
+                "verdict": entity_verification_res.get("verdict"),
+                "claimed_entity": entity_verification_res.get("claimed_entity"),
+                "claimed_registration": entity_verification_res.get("claimed_registration"),
+                "matched_record": entity_verification_res.get("matched_record")
+            }
+        },
+        "why_flagged": {
+            "en": why_flagged_en,
+            "hi": why_flagged_hi
+        },
         "assessment": fusion_assessment,
         "plain_explanations": plain_explanations,
         "visual_evidence_map": visual_evidence_map,
@@ -248,6 +359,7 @@ def run_proofly_pipeline(
         "qr_analysis": qr_analysis,
         "urls_analysis": urls_analysis,
         "identity_consistency": identity_analysis,
+        "entity_verification": entity_verification_res,
     }
 
     def sanitize_for_json(obj):

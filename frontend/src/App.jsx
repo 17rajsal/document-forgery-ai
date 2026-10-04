@@ -22,19 +22,24 @@ export default function App() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [history, setHistory] = useState([]);
 
+  // Bharat-First Language & Plain Mode State
+  const [language, setLanguage] = useState('en'); // 'en' | 'hi'
+  const [isSimpleMode, setIsSimpleMode] = useState(false);
+
   // UI Navigation & Modals
   const [activeNav, setActiveNav] = useState('new-analysis');
   const [activeModal, setActiveModal] = useState(null); // 'formats', 'how-it-works', 'history', 'settings'
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showOcrBoxes, setShowOcrBoxes] = useState(false);
 
-  // Analysis steps simulation for responsive UX feedback
+  // Proofly Multimodal pipeline stages
   const pipelineSteps = [
-    'Ingesting & rasterizing document container...',
-    'Executing tri-pass OCR & word boundary detection...',
-    'Performing spatial Error Level Analysis (ELA)...',
-    'Analyzing noise variance & copy-move feature clusters...',
-    'Checking mathematical checksums & synthesizing 4-tier verdict...'
+    'Ingesting financial document & verifying binary container...',
+    'Scanning for generative AI inpainting, erase & texture anomalies...',
+    'Extracting critical financial fields & checking verbal-vs-numeric amounts...',
+    'Detecting high-risk promises & statutory regulatory conflicts...',
+    'Decoding embedded QR codes & validating UPI payee consistency...',
+    'Fusing multimodal evidence into explainable Proofly assessment...'
   ];
 
   // Fetch health and samples on mount
@@ -50,6 +55,14 @@ export default function App() {
       .catch(() => setSamples([]));
   }, []);
 
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === 'en' ? 'hi' : 'en'));
+  };
+
+  const toggleSimpleMode = () => {
+    setIsSimpleMode((prev) => !prev);
+  };
+
   // Handle sidebar navigation clicks
   const handleNavClick = (navId) => {
     setActiveNav(navId);
@@ -57,7 +70,7 @@ export default function App() {
     else if (navId === 'how-it-works') setActiveModal('how-it-works');
     else if (navId === 'history') setActiveModal('history');
     else if (navId === 'settings') setActiveModal('settings');
-    else if (navId === 'samples') {
+    else if (navId === 'samples' || navId === 'demos') {
       const el = document.getElementById('sample-documents-section');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
@@ -88,7 +101,7 @@ export default function App() {
     setErrorMessage(null);
 
     const stepInterval = setInterval(() => {
-      setAnalysisStep((prev) => (prev < 4 ? prev + 1 : prev));
+      setAnalysisStep((prev) => (prev < 5 ? prev + 1 : prev));
     }, 600);
 
     const formData = new FormData();
@@ -114,7 +127,7 @@ export default function App() {
       setHistory((prev) => [data, ...prev.filter((h) => h.filename !== data.filename)]);
     } catch (err) {
       clearInterval(stepInterval);
-      setErrorMessage(err.message || 'Error occurred while communicating with forensic backend.');
+      setErrorMessage(err.message || 'Error occurred while communicating with Proofly backend.');
     } finally {
       setIsAnalyzing(false);
     }
@@ -128,7 +141,7 @@ export default function App() {
     setAnalysisStep(0);
 
     const stepInterval = setInterval(() => {
-      setAnalysisStep((prev) => (prev < 4 ? prev + 1 : prev));
+      setAnalysisStep((prev) => (prev < 5 ? prev + 1 : prev));
     }, 550);
 
     try {
@@ -146,14 +159,93 @@ export default function App() {
       const data = await response.json();
       setAnalysisResult(data);
 
-      // Add to session history
       setHistory((prev) => [data, ...prev.filter((h) => h.filename !== data.filename)]);
-
-      // Scroll smoothly to results
       window.scrollTo({ top: 120, behavior: 'smooth' });
     } catch (err) {
       clearInterval(stepInterval);
       setErrorMessage(err.message || 'Failed to analyze sample document.');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  // Run SANGYAN Hackathon Deterministic Demo Scenario (Kavita WhatsApp Scam, etc.)
+  const analyzeDemoScenario = async (demoId) => {
+    setIsAnalyzing(true);
+    setAnalysisResult(null);
+    setSelectedFile(null);
+    setErrorMessage(null);
+    setAnalysisStep(0);
+
+    const stepInterval = setInterval(() => {
+      setAnalysisStep((prev) => (prev < 5 ? prev + 1 : prev));
+    }, 450);
+
+    try {
+      const response = await fetch(`${API_BASE}/api/proofly/analyze-demo/${encodeURIComponent(demoId)}`, {
+        method: 'POST',
+      });
+
+      clearInterval(stepInterval);
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({ detail: 'Demo analysis failed' }));
+        throw new Error(errData.detail || `Server returned code ${response.status}`);
+      }
+
+      const data = await response.json();
+      setAnalysisResult(data);
+
+      setHistory((prev) => [data, ...prev.filter((h) => h.filename !== data.filename)]);
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+    } catch (err) {
+      clearInterval(stepInterval);
+      setErrorMessage(err.message || 'Failed to execute demo benchmark scenario.');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const analyzeTextSubmission = async ({ text, url }) => {
+    setIsAnalyzing(true);
+    setAnalysisResult(null);
+    setSelectedFile(null);
+    setErrorMessage(null);
+    setAnalysisStep(0);
+
+    const stepInterval = setInterval(() => {
+      setAnalysisStep((prev) => (prev < 5 ? prev + 1 : prev));
+    }, 400);
+
+    try {
+      const response = await fetch(`${API_BASE}/api/analyze-text`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text,
+          url,
+          language
+        }),
+      });
+
+      clearInterval(stepInterval);
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({ detail: 'Text analysis failed' }));
+        throw new Error(errData.detail || `Server returned code ${response.status}`);
+      }
+
+      const data = await response.json();
+      data.text_preview = text;
+      data.filename = url ? `Link: ${url.slice(0, 35)}` : 'Pasted Message';
+      data.document_type = 'Message & Link';
+      setAnalysisResult(data);
+
+      setHistory((prev) => [data, ...prev.filter((h) => h.filename !== data.filename)]);
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    } catch (err) {
+      clearInterval(stepInterval);
+      setErrorMessage(err.message || 'Failed to analyze text message.');
     } finally {
       setIsAnalyzing(false);
     }
@@ -172,10 +264,13 @@ export default function App() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `docshield_audit_${analysisResult.filename || 'report'}.json`;
+    a.download = `proofly_evidence_dossier_${analysisResult.filename || 'report'}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  const proofly = analysisResult?.proofly || {};
+  const plainExp = proofly?.plain_explanations || {};
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900">
@@ -187,6 +282,10 @@ export default function App() {
           historyCount={history.length}
           backendStatus={backendStatus}
           onNewAnalysis={resetAnalysis}
+          onOpenDemoSection={() => {
+            const el = document.getElementById('sample-documents-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
           mobileOpen={mobileOpen}
           setMobileOpen={setMobileOpen}
         />
@@ -200,6 +299,12 @@ export default function App() {
             onOpenFormats={() => setActiveModal('formats')}
             setMobileOpen={setMobileOpen}
             backendStatus={backendStatus}
+            language={language}
+            onToggleLanguage={toggleLanguage}
+            isSimpleMode={isSimpleMode}
+            onToggleSimpleMode={toggleSimpleMode}
+            voiceTextEn={plainExp.voice_script_en}
+            voiceTextHi={plainExp.voice_script_hi}
           />
 
           {/* DASHBOARD CONTENT */}
@@ -208,6 +313,7 @@ export default function App() {
             <FeatureCards
               onOpenFormats={() => setActiveModal('formats')}
               onOpenHowItWorks={() => setActiveModal('how-it-works')}
+              language={language}
             />
 
             {/* MAIN 3-COLUMN WORKSPACE */}
@@ -219,6 +325,7 @@ export default function App() {
                   onFileSelected={handleFileSelected}
                   onRemoveSelectedFile={handleRemoveSelectedFile}
                   onAnalyze={uploadAndAnalyze}
+                  onAnalyzeText={analyzeTextSubmission}
                   isAnalyzing={isAnalyzing}
                   analysisStep={analysisStep}
                   pipelineSteps={pipelineSteps}
@@ -239,6 +346,7 @@ export default function App() {
                   totalPages={analysisResult?.total_pages || 1}
                   showOcrBoxes={showOcrBoxes}
                   setShowOcrBoxes={setShowOcrBoxes}
+                  analysisResult={analysisResult}
                 />
               </div>
 
@@ -248,6 +356,8 @@ export default function App() {
                   analysisResult={analysisResult}
                   onReset={resetAnalysis}
                   onDownloadReport={downloadJsonReport}
+                  language={language}
+                  isSimpleMode={isSimpleMode}
                 />
               </div>
             </div>
@@ -257,15 +367,19 @@ export default function App() {
               <ResultTabs
                 analysisResult={analysisResult}
                 onDownloadReport={downloadJsonReport}
+                language={language}
+                isSimpleMode={isSimpleMode}
               />
             )}
 
-            {/* SAMPLE DOCUMENTS SECTION */}
+            {/* SANGYAN HACKATHON BENCHMARK & DEMO SCENARIOS SECTION */}
             <div id="sample-documents-section">
               <SampleDocuments
                 samples={samples}
                 onSelectSample={analyzeSampleDoc}
+                onSelectDemoScenario={analyzeDemoScenario}
                 isAnalyzing={isAnalyzing}
+                language={language}
               />
             </div>
           </main>
@@ -274,12 +388,14 @@ export default function App() {
           <footer className="border-t border-slate-200/80 bg-white px-6 py-6 text-xs text-slate-500 mt-auto">
             <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-700">DocShield AI</span>
+                <span className="font-black text-slate-800">Proofly Investor</span>
                 <span>•</span>
-                <span>AI-Powered Document Authenticity & Forgery Verification System</span>
+                <span className="italic text-slate-600">Verify before you trust.</span>
+                <span>•</span>
+                <span>SANGYAN Hackathon — IIT (BHU) × SEBI × NSDL</span>
               </div>
-              <div className="text-slate-400">
-                PyTesseract • Spatial ELA • Laplacian Noise Variance • FastAPI
+              <div className="text-slate-400 font-mono text-[11px]">
+                Multimodal Computer Vision • Zero-Click QR • Regulatory Cross-Check • Bharat-First Voice
               </div>
             </div>
           </footer>

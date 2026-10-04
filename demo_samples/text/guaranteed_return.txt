@@ -1,0 +1,12 @@
+DEMO SAMPLE — NOT A REAL FINANCIAL DOCUMENT
+
+PROOFLY DEMO INVESTMENT PLAN
+Plan: Fictional Moonrise Growth Sprint
+Invest ₹50,000. Get ₹80,000 in 30 days!
+Guaranteed 60% profit. Zero risk. No losses possible.
+Only 10 slots left — pay within 15 minutes to lock your return!
+Registration-style ID: DEMO-INV-83921 (fabricated)
+Website: https://moonrise-fast-profit.example/activate
+QR payload text (not a scannable payment code):
+DEMO_ONLY|PLAN=MOONRISE|AMOUNT_INR=50000|REFERENCE=DEMO-83921
+Fictional promotional message for testing; do not send money.
