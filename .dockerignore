@@ -1,7 +1,19 @@
 # Keep local user documents and extracted reports out of deployment images.
-backend/uploads/
+backend/uploads/*
+!backend/uploads/.gitkeep
 backend/analysis_results/
 .env
 .env.*
 !.env.example
 .git/
+.venv/
+venv/
+node_modules/
+frontend/dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.log
+.vscode/
+.idea/
+outputs/

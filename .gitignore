@@ -1,9 +1,25 @@
+# Environments & virtualenvs
 .venv/
-__pycache__/
-*.pyc
+venv/
 .env
 .env.*
 !.env.example
+
+# Python cache & test artifacts
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node / Frontend build artifacts
+node_modules/
+frontend/dist/
+
+# Logs & Editor configs
+*.log
+.vscode/
+.idea/
+
+# ML datasets & checkpoints
 dataset/
 models/
 *.pkl
@@ -12,8 +28,12 @@ models/
 
 # Proofly local analysis artifacts (may contain extracted document text)
 backend/analysis_results/
-# Runtime uploads may contain personal documents; public fixtures live in demo_samples/.
-backend/uploads/
+
+# Runtime uploads: ignore all contents except harmless .gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Temporary outputs
 outputs/test-tmp/
 outputs/proofly_synthetic/
 outputs/proofly_smoke/
