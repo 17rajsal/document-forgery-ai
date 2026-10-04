@@ -1,0 +1,13 @@
+DEMO SAMPLE — NOT A REAL FINANCIAL DOCUMENT
+
+PROOFLY DEMO BROKER MESSAGE
+Sender: Fictional CedarBridge Investor Clearance Desk
+CLAIM: SEBI-approved broker; official regulator verification partner.
+Claimed registration ID: DEMO-BROKER-472910 (fabricated)
+Your investment account will be frozen in 20 minutes.
+Verify immediately and pay a refundable ₹2,499 clearance fee.
+Website: https://sebi-clearance.cedarbridge-check.example/verify
+Reply address: urgent-desk@cedarbridge-mail.example
+We claim regulator authority but request payment on our own portal.
+This fictional broker is not affiliated with SEBI or any regulator.
+No real account, registration, payment destination, or approval exists.

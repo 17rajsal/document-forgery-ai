@@ -1,0 +1,36 @@
+{
+  "sample_id": "guaranteed_return",
+  "title": "Fictional Moonrise Growth Sprint",
+  "expected_risk": "high",
+  "expected_findings": [
+    "Unrealistic guaranteed return",
+    "False zero-risk framing",
+    "Urgency and scarcity pressure",
+    "Fabricated registration-style identifier"
+  ],
+  "expected_ocr_fields": {
+    "plan_name": "Fictional Moonrise Growth Sprint",
+    "investment_amount_inr": 50000,
+    "promised_payout_inr": 80000,
+    "duration_days": 30,
+    "claimed_profit_percent": 60,
+    "registration_id": "DEMO-INV-83921",
+    "url": "https://moonrise-fast-profit.example/activate",
+    "qr_payload_text": "DEMO_ONLY|PLAN=MOONRISE|AMOUNT_INR=50000|REFERENCE=DEMO-83921"
+  },
+  "expected_scam_signals": [
+    "guaranteed_returns",
+    "unrealistic_returns",
+    "zero_risk_claim",
+    "urgency",
+    "scarcity",
+    "unverified_registration"
+  ],
+  "disclaimer": "DEMO SAMPLE — NOT A REAL FINANCIAL DOCUMENT",
+  "expectation_type": "QA/demo expectations only — not production AI results",
+  "notes": [
+    "All names and registration identifiers are fictional; .example domains are placeholders.",
+    "Expected risk is a fixture label, not an AI verdict or financial advice.",
+    "Assess context and negation; the educational control mentions risk and guarantees without promoting them."
+  ]
+}

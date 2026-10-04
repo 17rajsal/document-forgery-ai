@@ -1,0 +1,19 @@
+{
+  "sample_id": "educational_control",
+  "title": "Fictional investing education handout",
+  "expected_risk": "low",
+  "expected_findings": [],
+  "expected_ocr_fields": {
+    "topic": "Understanding investment risk",
+    "publisher": "Fictional Riverstone Learning Circle",
+    "document_type": "educational handout"
+  },
+  "expected_scam_signals": [],
+  "disclaimer": "DEMO SAMPLE — NOT A REAL FINANCIAL DOCUMENT",
+  "expectation_type": "QA/demo expectations only — not production AI results",
+  "notes": [
+    "All names and registration identifiers are fictional; .example domains are placeholders.",
+    "Expected risk is a fixture label, not an AI verdict or financial advice.",
+    "Assess context and negation; the educational control mentions risk and guarantees without promoting them."
+  ]
+}

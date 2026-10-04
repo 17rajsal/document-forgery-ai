@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "disclaimer": "DEMO SAMPLE — NOT A REAL FINANCIAL DOCUMENT",
+  "purpose": "Standalone fictional fixtures; expectations are not production AI results.",
+  "assets": [
+    {
+      "path": "text/guaranteed_return.txt",
+      "sample_id": "guaranteed_return",
+      "category": "scam_language",
+      "purpose": "Plain-text NLP/OCR reference"
+    },
+    {
+      "path": "images/guaranteed_return.png",
+      "sample_id": "guaranteed_return",
+      "category": "scam_language",
+      "purpose": "Synthetic document for OCR"
+    },
+    {
+      "path": "metadata/guaranteed_return.json",
+      "sample_id": "guaranteed_return",
+      "category": "scam_language",
+      "purpose": "QA expectations only; not AI output"
+    },
+    {
+      "path": "text/broker_impersonation.txt",
+      "sample_id": "broker_impersonation",
+      "category": "impersonation",
+      "purpose": "Plain-text NLP/OCR reference"
+    },
+    {
+      "path": "images/broker_impersonation.png",
+      "sample_id": "broker_impersonation",
+      "category": "impersonation",
+      "purpose": "Synthetic document for OCR"
+    },
+    {
+      "path": "metadata/broker_impersonation.json",
+      "sample_id": "broker_impersonation",
+      "category": "impersonation",
+      "purpose": "QA expectations only; not AI output"
+    },
+    {
+      "path": "text/educational_control.txt",
+      "sample_id": "educational_control",
+      "category": "normal_control",
+      "purpose": "Plain-text NLP/OCR reference"
+    },
+    {
+      "path": "images/educational_control.png",
+      "sample_id": "educational_control",
+      "category": "normal_control",
+      "purpose": "Synthetic document for OCR"
+    },
+    {
+      "path": "metadata/educational_control.json",
+      "sample_id": "educational_control",
+      "category": "normal_control",
+      "purpose": "QA expectations only; not AI output"
+    },
+    {
+      "path": "images/original_demo.png",
+      "sample_id": "document_tampering",
+      "category": "document_tampering",
+      "purpose": "Original amount ₹5,000"
+    },
+    {
+      "path": "images/tampered_demo.png",
+      "sample_id": "document_tampering",
+      "category": "document_tampering",
+      "purpose": "Edited amount ₹50,000 with localized visual mismatch"
+    },
+    {
+      "path": "metadata/tampering.json",
+      "sample_id": "document_tampering",
+      "category": "document_tampering",
+      "purpose": "Exact patch coordinates and before/after values"
+    }
+  ],
+  "notes": [
+    "Paths are relative to demo_samples. This manifest inventories the sample payloads.",
+    "Run python scripts/qa/check_demo_assets.py; Pillow is optional for pixel validation.",
+    "Rebuild with python scripts/qa/generate_demo_assets.py (Pillow required).",
+    "No application integration or live-domain checks are performed."
+  ]
+}
