@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: proofly-investor-sangyan
+    name: proofly-app
     env: docker
     dockerfilePath: Dockerfile
     plan: free

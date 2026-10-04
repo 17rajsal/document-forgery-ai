@@ -1,15 +1,12 @@
-# Proofly Investor
+# Proofly
 
 <div align="center">
 
 ### **Verify before you trust.**
 
-**An Explainable Multimodal Financial-Document Verification & Investor-Safety Platform**  
-*Built for the SANGYAN Investor Resilience Hackathon — IIT (BHU), in collaboration with SEBI and NSDL.*
+**Explainable Multimodal Document & Communication Fraud Verification Platform**
 
-[![Live Demo](https://img.shields.io/badge/Render%20Live%20Demo-HTTPS%20Online-success.svg)](https://proofly-investor-sangyan.onrender.com)
-[![Track](https://img.shields.io/badge/SANGYAN%20Hackathon-Track%20A%3A%20Digital%20Fraud%20Resilience-blue.svg)](https://iitbhu.ac.in)
-[![Track](https://img.shields.io/badge/Secondary-Track%20E%3A%20Content%20Literacy-indigo.svg)](https://iitbhu.ac.in)
+[![Live Demo](https://img.shields.io/badge/Live%20Application-HTTPS%20Online-success.svg)](https://proofly-app.onrender.com)
 [![CI](https://github.com/17rajsal/document-forgery-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/17rajsal/document-forgery-ai/actions/workflows/ci.yml)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI%20%2B%20Python%203.12-009688.svg)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React%2019%20%2B%20TailwindCSS-61DAFB.svg)](https://react.dev)
@@ -19,38 +16,38 @@
 </div>
 
 > [!TIP]
-> 🌐 **Persistent Public Application (Render)**: [https://proofly-investor-sangyan.onrender.com](https://proofly-investor-sangyan.onrender.com)  
-> Configured and deployed via Render Multi-Stage Docker Blueprint (`render.yaml` + `Dockerfile`). Evaluators and hackathon judges can access the live application directly in any desktop or mobile browser without logging in. Both the React 19 SPA frontend and the FastAPI backend are unified in a single container.
+> 🌐 **Production Web Application (Render)**: [https://proofly-app.onrender.com](https://proofly-app.onrender.com)  
+> Configured and deployed via Render Multi-Stage Docker Blueprint (`render.yaml` + `Dockerfile`). Access the live application directly in any desktop or mobile browser without logging in. Both the React 19 SPA frontend and the FastAPI backend are unified in a single high-performance container.
 
 ---
 
 ## 🎯 Executive Summary & Mission
 
-India's retail investment landscape is expanding rapidly into Tier-2 and Tier-3 towns. First-time investors, elderly citizens, and people with limited financial literacy are increasingly targeted by sophisticated digital scams distributed across **WhatsApp, Telegram, SMS, and fake web portals**.
+Digital communication channels have made financial scams and document manipulation increasingly prevalent. Fraudulent schemes often circulate across **messaging applications, email, and social networks**, leveraging manipulated documents and deceptive text to mislead individuals.
 
-These scams rely on:
-1. **Manipulated Documents**: Fabricated allotment letters, altered bank deposit slips, and AI-erased dividend certificates.
-2. **Prohibited Regulatory Claims**: "Guaranteed 30% monthly returns", "SEBI approved priority quota", and "100% risk-free investments".
-3. **Impersonated Intermediaries**: Fake advisories claiming real SEBI registration numbers or spoofing registered brokers.
-4. **Malicious Redirects**: Zero-click personal UPI QR codes and lookalike phishing domains (`zerodha-bonus-invest.xyz`).
+These vectors rely on:
+1. **Manipulated Documents**: Fabricated certificates, altered receipts, spliced amount fields, and AI-erased text.
+2. **High-Risk Claims**: Unrealistic guaranteed return promises, false regulatory endorsements, and artificial FOMO urgency.
+3. **Impersonated Entities**: Fake advisories claiming legitimate corporate or regulatory registration numbers.
+4. **Deceptive Links & QR Codes**: Lookalike typosquatting domains and redirected personal payment links.
 
-**Proofly Investor** acts as an AI guardian for retail investors. It does not ask users to blindly trust AI; instead, it exposes the multi-layered digital evidence that makes a communication suspicious and guides the investor on safe, verified next steps.
+**Proofly** provides a multi-layered verification system that analyzes digital evidence transparently, highlights anomalies, and guides users through independent verification steps before taking action.
 
 ---
 
-## 🛡️ Strict Regulatory Guardrails
+## 🛡️ Statutory Guardrails & Non-Negotiable Boundaries
 
 > [!IMPORTANT]
-> **Statutory Non-Negotiable Boundaries:**
-> - ❌ Proofly **NEVER** gives stock tips, buy/sell/hold calls, or price targets.
-> - ❌ Proofly **NEVER** promises returns or promotes financial products/brokers.
-> - ❌ Proofly **NEVER** claims 100% legal certainty or makes guaranteed fraud verdicts.
-> - ✅ Proofly **ONLY** verifies authenticity, flags digital manipulation, checks regulatory directories, and provides explainable, probabilistic risk breakdowns.
+> **Strict Operational Boundaries:**
+> - ❌ Proofly **NEVER** gives investment advice, stock recommendations, or buy/sell/hold calls.
+> - ❌ Proofly **NEVER** promotes financial products, intermediaries, or commercial platforms.
+> - ❌ Proofly **NEVER** claims 100% legal certainty or makes conclusive legal fraud determinations.
+> - ✅ Proofly **ONLY** flags digital manipulation anomalies, checks directory formats, and provides explainable, probabilistic risk indicators.
 
 All findings strictly distinguish between:
-- **`VERIFIED`**: Corroborated against official regulatory records.
-- **`NOT VERIFIED`**: Inconsistent formats or conflicting ownership records.
-- **`UNABLE TO VERIFY`**: Registration or claim could not be independently validated in offline reference directory mirrors; user is directed to `sebi.gov.in`.
+- **`Verified`**: Corroborated against public reference records.
+- **`Not Verified`**: Inconsistent formats or conflicting directory records.
+- **`Unable to Verify`**: Information could not be independently validated in offline reference mirrors; user is directed to authoritative official portals.
 
 ---
 
@@ -60,17 +57,17 @@ Every document, screenshot, pasted message, or URL submitted to Proofly is evalu
 
 ```
                   ┌────────────────────────────────────────────────────────┐
-                  │              COMPOSITE INVESTOR SCAM RISK              │
+                  │                    RISK ASSESSMENT                     │
                   │             0 - 100  (HIGH / MODERATE / LOW)           │
                   └───────────────────────────┬────────────────────────────┘
                                               │
          ┌──────────────────┬─────────────────┴────────────────┬──────────────────┐
          ▼                  ▼                                  ▼                  ▼
 ┌──────────────────┐┌──────────────────┐              ┌──────────────────┐┌──────────────────┐
-│DOCUMENT INTEGRITY││  SCAM LANGUAGE   │              │ URL/DOMAIN RISK  ││ENTITY VERIF.     │
+│DOCUMENT INTEGRITY││HIGH-RISK LANGUAGE│              │ URL/DOMAIN RISK  ││ENTITY VERIF.     │
 │  0 - 100 Susp.   ││  0 - 100 Susp.   │              │  0 - 100 Susp.   ││VERIFIED / NOT VER│
-│ELA, Inpainting,  ││Guaranteed yields,│              │Lookalike domains,││SEBI/NSDL registry│
-│Noise, Amount Mod ││Fake SEBI stamps  │              │HTTP, Raw IPs     ││mirror lookup     │
+│ELA, Inpainting,  ││Guaranteed yields,│              │Lookalike domains,││Official registry │
+│Noise, Amount Mod ││Fake auth stamps  │              │HTTP, Raw IPs     ││mirror lookup     │
 └──────────────────┘└──────────────────┘              └──────────────────┘└──────────────────┘
 ```
 
@@ -80,17 +77,17 @@ Every document, screenshot, pasted message, or URL submitted to Proofly is evalu
    - Semantic discrepancy checking (e.g. numeric "₹90,000" vs written verbal words "ten thousand rupees").
    - Multi-pass neural OCR (High-contrast, Otsu binarization, Adaptive Gaussian).
 
-2. **Scam Language & Urgency (`0–100`)**:
-   - Comprehensive pattern triggers for statutorily prohibited claims under SEBI regulations.
-   - Flags "guaranteed returns", "double money in 30 days", "100% risk free", and artificial FOMO deadlines.
+2. **High-Risk Language & Urgency (`0–100`)**:
+   - Comprehensive pattern triggers for statutorily prohibited financial claims.
+   - Flags "guaranteed returns", "double money in 30 days", "zero risk", and artificial countdown deadlines.
 
 3. **URL & Domain Risk (`0–100`)**:
-   - Lookalike/typosquatting detection against major Indian financial institutions (`zerodha`, `groww`, `icici`, `hdfc`, `nsdl`, `sebi`).
+   - Lookalike/typosquatting detection against major financial institutions and portals.
    - Passive inspection: Insecure HTTP, raw IP addresses, URL shorteners, excessive subdomains, and disposable TLDs (`.xyz`, `.top`).
 
-4. **Entity & Registration Verification (`VERIFIED | NOT VERIFIED | UNABLE TO VERIFY`)**:
-   - Pattern validation for SEBI broker (`INZ`), adviser (`INA`), analyst (`INH`), and NSDL DP (`IN-DP`) formats.
-   - Reference directory mirror cross-check detecting entity impersonation (e.g. valid Zerodha registration claimed by a fake company).
+4. **Entity & Registration Verification (`Verified | Not Verified | Unable to verify`)**:
+   - Pattern validation for official regulatory intermediary registration formats.
+   - Reference directory mirror cross-check detecting entity impersonation.
 
 ---
 
@@ -109,23 +106,23 @@ flowchart TD
         S["POST /upload & /api/analyze"]
         T["POST /api/analyze-text"]
         E["POST /api/verify-entity"]
-        D["POST /api/proofly/analyze-demo/{id}"]
+        D["POST /api/codex-demos/analyze/{id}"]
     end
 
     subgraph Forensics["Multimodal Verification Engine"]
         CV1["Multi-Format ELA & Noise Residuals"]
         CV2["AI Inpainting & Texture Erase Detector"]
         OCR["Multi-Pass Adaptive OCR (pytesseract)"]
-        NLP["Scam Language & Urgency Analyzer"]
+        NLP["High-Risk Language & Urgency Analyzer"]
         URL["Passive URL & Lookalike Domain Engine"]
-        QR["Zero-Click QR Code & UPI Decoder"]
-        REG["SEBI & NSDL Directory Mirror Verifier"]
+        QR["QR Code & Link Decoder"]
+        REG["Official Directory Mirror Verifier"]
     end
 
     subgraph Synthesis["Evidence Fusion & Explainability"]
         FUS["4-Component Risk Fusion Matrix"]
         EXP["Bilingual Explanations (English & Hindi)"]
-        VOI["Bharat-First Web Speech Voice Synthesis"]
+        VOI["Web Speech Voice Synthesis"]
         DOS["Evidence Dossier JSON Exporter"]
     end
 
@@ -134,40 +131,6 @@ flowchart TD
     Forensics --> Synthesis
     Synthesis --> Client
 ```
-
----
-
-## 🎬 3–5 Minute Judge Demo Walkthrough
-
-Judges and evaluators can verify the complete Proofly Investor capabilities in **under 4 minutes** using our curated deterministic benchmark suite:
-
-### Step 1: The SANGYAN Benchmark Case (1 Minute)
-1. Open the Proofly Investor dashboard.
-2. Scroll to the **SANGYAN Hackathon Benchmark Scenarios** section.
-3. Click **"Analyze Demo Case"** on the first scenario:  
-   **"Benchmark: SEBI & NSDL Guaranteed Allotment (₹50k -> ₹80k)"**
-4. Observe the instant multimodal results:
-   - **Investor Scam Risk**: `95/100 (HIGH RISK)`.
-   - **Document Integrity**: Digital amount splicing and compression inconsistency detected.
-   - **Scam Language**: `100/100` — Prohibited "60% return within 30 days" yield promise flagged.
-   - **Entity Verification**: `NOT VERIFIED / UNABLE TO VERIFY` — Registration `INZ999888777` not found in the public reference directory.
-   - **QR & Payment Audit**: Zero-click QR flags personal UPI handle (`vikram.personal88@okaxis`) belonging to an individual rather than an institutional escrow.
-
-### Step 2: Paste a Suspicious WhatsApp Forward (1 Minute)
-1. In the left panel, click the **"Text / Link"** tab.
-2. Click the quick scenario button: **"Pre-IPO ₹50k Scheme"**.
-3. Click **"Analyze Message & Link"**.
-4. Review the 4-component risk breakdown, lookalike domain warning (`zerodha-bonus-invest.xyz`), and plain-language explanation.
-
-### Step 3: Bharat-First Bilingual Mode & Voice Player (1 Minute)
-1. Click the top header toggle: **"English / हिंदी"**.
-2. The explanation switches to conversational Hindi:  
-   *"Savdhani: Niveshak Jokhim Bada Hai... 30 din mein guaranteed munafey ka jhootha daawa paya gaya."*
-3. Click **"Spoken Voice Summary"** to listen to the audio read-out via the browser's native Web Speech API.
-
-### Step 4: Visual Evidence Map & Dossier Download (1 Minute)
-1. Click into the **"Visual Evidence Map"** tab to view the bounding boxes highlighting spliced amounts and fake stamps.
-2. Click **"Evidence Dossier"** to download the comprehensive, tamper-evident forensic JSON report.
 
 ---
 
@@ -210,12 +173,12 @@ Open **`http://localhost:8000`** in your browser.
 
 ## 🐳 Docker Deployment
 
-Proofly includes a production-ready, multi-stage `Dockerfile` that packages Node.js, Python 3.11-slim, and Tesseract OCR:
+Proofly includes a production-ready, multi-stage `Dockerfile` that packages Node.js, Python 3.12-slim, and Tesseract OCR:
 
 ```bash
 # Build and run with Docker
-docker build -t proofly-investor .
-docker run -p 8000:8000 proofly-investor
+docker build -t proofly .
+docker run -p 8000:8000 proofly
 
 # Or using Docker Compose
 docker-compose up --build
@@ -231,7 +194,7 @@ Proofly includes rigorous test suites validating security, ML inference, entity 
 # 1. Run Core Multimodal Forensic Tests (10/10 Passed)
 python -m unittest tests/test_proofly.py
 
-# 2. Run Investor Safety & Scam Engine Tests (13/13 Passed)
+# 2. Run Safety & Fraud Engine Tests (13/13 Passed)
 python -m unittest tests/test_investor_safety.py
 
 # 3. Run Intelligence API Regression Tests (18/18 Passed)
@@ -244,22 +207,26 @@ python backend/test_integration.py
 ### Test Coverage Highlights
 - ✅ **Format Ingestion**: PDF, DOCX, TIFF, BMP, WEBP, PNG, JPG verified.
 - ✅ **Security Hardening**: Disguised magic bytes, disallowed file extensions, 0-byte uploads, and path traversals blocked.
-- ✅ **Entity Verification**: Real SEBI brokers verified; impersonation and malformed registrations flagged.
-- ✅ **Lookalike Domains**: Typosquatting of Indian institutions reliably intercepted.
-- ✅ **Graceful Degradation**: Offline privacy mode activates cleanly when external networks are unavailable.
+- ✅ **Entity Verification**: Official regulatory formats verified; impersonation and malformed registrations flagged.
+- ✅ **Lookalike Domains**: Typosquatting of institutions reliably intercepted.
+- ✅ **Privacy Mode**: Ephemeral in-memory handling with zero retention of uploaded documents.
 
 ---
 
-## 🔗 Official Repository & Team
+## 🏛️ Hackathon Context & Heritage
+
+Proofly was originally prototyped for the **SANGYAN Investor Resilience Hackathon** organized by **IIT (BHU)** in collaboration with **SEBI and NSDL** (Track A: Digital Fraud Resilience & Track E: Misinformation & Content Literacy). The codebase has since been evolved into an independent, production-grade fraud and document verification service.
+
+---
+
+## 🔗 Official Repository & Links
 
 - **GitHub Repository**: [https://github.com/17rajsal/document-forgery-ai](https://github.com/17rajsal/document-forgery-ai)
-- **Hackathon Context**: SANGYAN Investor Resilience Hackathon — IIT (BHU) × SEBI × NSDL
-- **Primary Track**: Track A — Digital Fraud & Scam Resilience
-- **Secondary Track**: Track E — Misinformation & Content Literacy
-- **Status**: Production-Ready Hackathon Prototype
+- **Live Production Application**: [https://proofly-app.onrender.com](https://proofly-app.onrender.com)
+- **Security Policy**: [SECURITY.md](SECURITY.md)
 
 ---
 
 <div align="center">
-  <sub>Proofly Investor is an educational and forensic verification tool built for investor resilience. Always verify market intermediaries directly at <a href="https://www.sebi.gov.in">sebi.gov.in</a> before transferring funds.</sub>
+  <sub>Proofly provides risk indicators and educational safety guidance. It does not guarantee authenticity or replace official verification.</sub>
 </div>

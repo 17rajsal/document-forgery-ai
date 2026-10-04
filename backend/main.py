@@ -45,19 +45,29 @@ app = FastAPI(
 )
 
 # =========================================================
-# CORS MIDDLEWARE
+# CORS & SECURITY HEADERS
 # =========================================================
 
-allowed_origins_env = os.environ.get("ALLOWED_ORIGINS", "*")
-allowed_origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+allowed_origins_env = os.environ.get("ALLOWED_ORIGINS", "")
+has_custom_origins = bool(allowed_origins_env.strip() and allowed_origins_env.strip() != "*")
+allowed_origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip()] if has_custom_origins else ["*"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins if allowed_origins else ["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=allowed_origins,
+    allow_credentials=has_custom_origins,
+    allow_methods=["GET", "POST", "OPTIONS", "HEAD"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(self)"
+    return response
 
 # File upload constraints (30MB default max)
 MAX_FILE_SIZE_BYTES = int(os.environ.get("MAX_FILE_SIZE_BYTES", 30 * 1024 * 1024))

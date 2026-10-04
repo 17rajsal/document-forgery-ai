@@ -1,10 +1,13 @@
-name: Proofly Investor CI
+name: Proofly CI
 
 on:
   push:
-    branches: [ main, feature/proofly-ai-backend ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
+
+permissions:
+  contents: read
 
 jobs:
   test-and-build:
@@ -44,7 +47,7 @@ jobs:
           npm run build
           cd ..
 
-      - name: Run Proofly Investor Safety Tests
+      - name: Run Proofly Safety Tests
         run: |
           python -m unittest tests/test_investor_safety.py -v
 
@@ -56,7 +59,6 @@ jobs:
         run: |
           python -m unittest tests/test_proofly.py -v
 
-      - name: Run Codex Demo Assets QA
+      - name: Run Demo Assets QA
         run: |
           python scripts/qa/check_demo_assets.py
-

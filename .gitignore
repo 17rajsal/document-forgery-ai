@@ -5,10 +5,25 @@ venv/
 .env.*
 !.env.example
 
+# Credentials & secrets protection
+credentials.json
+secrets.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.cert
+*.crt
+id_rsa*
+*.pub
+
 # Python cache & test artifacts
 __pycache__/
 *.pyc
+*.pyo
 .pytest_cache/
+.coverage
+htmlcov/
 
 # Node / Frontend build artifacts
 node_modules/
@@ -18,6 +33,13 @@ frontend/dist/
 *.log
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
+
+# Databases & local stores
+*.sqlite
+*.sqlite3
+*.db
 
 # ML datasets & checkpoints
 dataset/

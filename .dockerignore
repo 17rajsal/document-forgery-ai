@@ -5,6 +5,12 @@ backend/analysis_results/
 .env
 .env.*
 !.env.example
+credentials.json
+secrets.json
+*.pem
+*.key
+*.p12
+*.pfx
 .git/
 .venv/
 venv/
@@ -12,8 +18,12 @@ node_modules/
 frontend/dist/
 __pycache__/
 *.pyc
+*.pyo
 .pytest_cache/
 *.log
 .vscode/
 .idea/
 outputs/
+*.sqlite
+*.sqlite3
+*.db
