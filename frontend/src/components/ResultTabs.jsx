@@ -165,8 +165,8 @@ export default function ResultTabs({
                 </h3>
                 <p className="text-xs text-slate-500 m-0">
                   {language === 'hi'
-                    ? 'Document mein likhe gaye vaadon ko SEBI aur RBI niyamak sandarbh se cross-check kiya gaya hai.'
-                    : 'Statements cross-referenced against statutory SEBI and RBI market regulations.'}
+                    ? 'Document mein likhe gaye vaadon ko Regulatory Authority aur RBI niyamak sandarbh se cross-check kiya gaya hai.'
+                    : 'Statements cross-referenced against statutory Regulatory Authorities market regulations.'}
                 </p>
               </div>
               <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-slate-100 text-slate-600">

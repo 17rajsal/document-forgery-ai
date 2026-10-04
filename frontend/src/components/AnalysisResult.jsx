@@ -60,7 +60,7 @@ export default function AnalysisResult({
 
         <div className="mt-6 pt-4 border-t border-slate-100 text-center">
           <span className="text-[11px] text-slate-400">
-            Proofly Investor Engine • Investor safety through explainable risk analysis.
+            Proofly Engine • Verification safety through explainable risk analysis.
           </span>
         </div>
       </div>
@@ -85,7 +85,7 @@ export default function AnalysisResult({
   const getConcernTheme = () => {
     if (isHigh) {
       return {
-        label: language === 'hi' ? 'Savdhani: Niveshak Jokhim Bada Hai (High Risk)' : 'Investor Scam Risk: High Risk',
+        label: language === 'hi' ? 'Savdhani: Niveshak Jokhim Bada Hai (High Risk)' : 'Risk Assessment: High Risk',
         badge: 'HIGH RISK',
         color: 'text-rose-700',
         bg: 'bg-rose-50',
@@ -96,7 +96,7 @@ export default function AnalysisResult({
     }
     if (isMod) {
       return {
-        label: language === 'hi' ? 'Savdhani: Madhyam Jokhim (Moderate Risk)' : 'Investor Scam Risk: Moderate Risk',
+        label: language === 'hi' ? 'Savdhani: Madhyam Jokhim (Moderate Risk)' : 'Risk Assessment: Moderate Risk',
         badge: 'MODERATE RISK',
         color: 'text-amber-800',
         bg: 'bg-amber-50/70',
@@ -106,7 +106,7 @@ export default function AnalysisResult({
       };
     }
     return {
-      label: language === 'hi' ? 'Surakshit: Kam Jokhim (Low Risk)' : 'Investor Scam Risk: Low Risk',
+      label: language === 'hi' ? 'Surakshit: Kam Jokhim (Low Risk)' : 'Risk Assessment: Low Risk',
       badge: 'LOW RISK',
       color: 'text-emerald-700',
       bg: 'bg-emerald-50',

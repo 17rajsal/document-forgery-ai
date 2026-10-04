@@ -22,9 +22,9 @@ export default function SafeActionGuide({ language = 'en', safeSteps = [] }) {
     {
       step: 2,
       title: 'Verify Organization via Official Directory',
-      title_hi: 'Company ko official SEBI / RBI directory mein check karein',
-      description: 'Search the intermediary on sebi.gov.in or sachet.rbi.org.in. Do not use phone numbers printed on the document.',
-      description_hi: 'Document par likhe number par bharosa na karein. Official website sebi.gov.in par jakar registration verify karein.'
+      title_hi: 'Company ko official Regulatory Authorities directory mein check karein',
+      description: 'Search the intermediary on official-registry.gov.in or sachet.rbi.org.in. Do not use phone numbers printed on the document.',
+      description_hi: 'Document par likhe number par bharosa na karein. Official website official-registry.gov.in par jakar registration verify karein.'
     },
     {
       step: 3,
@@ -54,8 +54,8 @@ export default function SafeActionGuide({ language = 'en', safeSteps = [] }) {
       desc_hi: 'UPI ya online banking dhokhadhadi ki turant shikayat ke liye dial karein.'
     },
     {
-      name: 'SEBI SCORES Grievance Portal',
-      name_hi: 'SEBI SCORES Portal',
+      name: 'Regulatory Authority SCORES Grievance Portal',
+      name_hi: 'Regulatory Authority SCORES Portal',
       contact: 'scores.gov.in',
       actionType: 'web',
       url: 'https://scores.gov.in',
@@ -89,7 +89,7 @@ export default function SafeActionGuide({ language = 'en', safeSteps = [] }) {
         <AlertOctagon className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
         <div>
           <h4 className="text-xs font-bold uppercase tracking-wider mb-0.5">
-            {language === 'hi' ? 'Kavita aur Naye Niveshakon ke liye Suraksha Niyam' : 'Investor Safety Action Protocol'}
+            {language === 'hi' ? 'Kavita aur Naye Niveshakon ke liye Suraksha Niyam' : 'Safety Action Protocol'}
           </h4>
           <p className="text-xs text-amber-800 leading-relaxed m-0">
             {language === 'hi'

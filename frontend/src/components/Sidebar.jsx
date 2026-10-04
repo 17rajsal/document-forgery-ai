@@ -135,11 +135,11 @@ export default function Sidebar({
 
         {/* Backend & Security Status Box */}
         <div className="p-4 border-t border-slate-100 space-y-3">
-          {/* Proofly Investor Platform Pill */}
+          {/* Proofly Platform Pill */}
           <div className="p-2.5 rounded-xl bg-blue-50/60 border border-blue-200/60 text-[11px] space-y-1">
-            <span className="font-bold text-blue-900 block">Proofly Investor</span>
+            <span className="font-bold text-blue-900 block">Proofly</span>
             <p className="text-[10px] text-blue-700 m-0 leading-tight">
-              Investor Safety & Scam Detection
+              Verification Safety & Scam Detection
             </p>
           </div>
 

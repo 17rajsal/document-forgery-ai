@@ -23,11 +23,11 @@ export default function SampleDocuments({
 }) {
   const demoScenarios = [
     {
-      id: 'sebi_nsdl_50k_80k_certificate',
+      id: 'official_authority_50k_80k_certificate',
       title: "Sample: Guaranteed Return Allotment Scheme (₹50k -> ₹80k)",
       title_hi: "Sample Case: Guaranteed Allotment Scheme (₹50k -> ₹80k)",
-      persona: "Promised ₹80,000 return in 30 days for ₹50,000; fake SEBI reg INZ999888777, personal UPI QR vikram.personal88@okaxis",
-      persona_hi: "30 din mein ₹50,000 se ₹80,000 ka wada, jhoothi SEBI reg aur personal UPI QR",
+      persona: "Promised ₹80,000 return in 30 days for ₹50,000; fake regulatory reg INZ999888777, personal UPI QR vikram.personal88@okaxis",
+      persona_hi: "30 din mein ₹50,000 se ₹80,000 ka wada, jhoothi regulatory reg aur personal UPI QR",
       tag: "Sample Analysis",
       tag_color: "bg-rose-100 text-rose-800 border-rose-200",
       signals: ["₹50k -> ₹80k (60% 30-day)", "Fake Reg INZ999888777", "Personal UPI QR", "Digital Splicing", "DEMO SAMPLE Watermark"],
@@ -42,7 +42,7 @@ export default function SampleDocuments({
       persona_hi: "WhatsApp par mila jhootha pre-IPO allotment letter jisme personal UPI QR laga hai",
       tag: "WhatsApp Scam Case",
       tag_color: "bg-rose-100 text-rose-800 border-rose-200",
-      signals: ["Guaranteed 30% Return", "Fake SEBI Approved", "Personal UPI QR", "Urgency: 5 Slots Left"],
+      signals: ["Guaranteed 30% Return", "Fake Regulatory Authority Approved", "Personal UPI QR", "Urgency: 5 Slots Left"],
       icon: ShieldAlert,
       badge: "High Concern"
     },
@@ -75,10 +75,10 @@ export default function SampleDocuments({
       title: "Genuine Baseline: HDFC AMC Mutual Fund Statement",
       title_hi: "Asli Baseline: HDFC Mutual Fund Statement",
       persona: "Authentic quarterly statement with statutory risk disclaimer and consistent typography",
-      persona_hi: "Asli account statement jisme SEBI statutory warning aur ek jaisa font hai",
+      persona_hi: "Asli account statement jisme Regulatory Authority statutory warning aur ek jaisa font hai",
       tag: "Authentic Document",
       tag_color: "bg-emerald-100 text-emerald-800 border-emerald-200",
-      signals: ["Consistent Rasterization", "Official SEBI Regn", "Zero Scam Language"],
+      signals: ["Consistent Rasterization", "Official Regulatory Authority Regn", "Zero Scam Language"],
       icon: ShieldCheck,
       badge: "Low Concern"
     }
@@ -96,7 +96,7 @@ export default function SampleDocuments({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-white m-0">
-                  {language === 'hi' ? 'Niveshak Suraksha Sample Scenarios' : 'Curated Investor Safety Sample Scenarios'}
+                  {language === 'hi' ? 'Niveshak Suraksha Sample Scenarios' : 'Curated Verification Safety Sample Scenarios'}
                 </h3>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-400/30">
                   Sample Data

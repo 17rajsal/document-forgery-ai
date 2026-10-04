@@ -36,7 +36,7 @@ export default function Modals({
             {activeModal === 'settings' && <Settings className="h-5 w-5 text-blue-600" />}
             <h3 className="text-base font-bold text-slate-900 m-0">
               {activeModal === 'formats' && 'Supported Document Formats'}
-              {activeModal === 'how-it-works' && 'How Proofly Investor Works'}
+              {activeModal === 'how-it-works' && 'How Proofly Works'}
               {activeModal === 'history' && 'Analysis Session History'}
               {activeModal === 'settings' && 'System Configuration'}
             </h3>
@@ -56,7 +56,7 @@ export default function Modals({
           {activeModal === 'formats' && (
             <div className="space-y-4">
               <p className="text-slate-600 m-0">
-                Proofly Investor employs strict magic-byte binary header validation to ensure uploaded documents match their claimed extensions. Executables, scripts, and spoofed extensions are automatically rejected.
+                Proofly employs strict magic-byte binary header validation to ensure uploaded documents match their claimed extensions. Executables, scripts, and spoofed extensions are automatically rejected.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -110,7 +110,7 @@ export default function Modals({
                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
                   <span className="font-bold text-amber-700 block mb-1">3. Regulatory Reality & Scam Language</span>
                   <p className="text-slate-500 m-0">
-                    Identifies statutorily prohibited promises (guaranteed returns under SEBI regulations), false authority endorsements ("SEBI approved"), and artificial countdowns.
+                    Identifies statutorily prohibited promises (guaranteed returns under regulatory regulations), false authority endorsements ("claimed regulatory"), and artificial countdowns.
                   </p>
                 </div>
 

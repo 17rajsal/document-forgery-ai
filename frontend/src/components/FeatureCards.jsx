@@ -36,11 +36,11 @@ export default function FeatureCards({ onOpenFormats, onOpenHowItWorks, language
     {
       title: language === 'hi' ? 'Daawe aur Scam Language' : 'Claims & Scam Language',
       desc: language === 'hi'
-        ? 'Guaranteed 30% return aur jhoothe SEBI approval ke daawon ko pakadta hai.'
-        : 'Flags statutory violations like guaranteed returns, fake SEBI endorsements, and FOMO urgency.',
+        ? 'Guaranteed 30% return aur jhoothe Regulatory Authority approval ke daawon ko pakadta hai.'
+        : 'Flags statutory violations like guaranteed returns, fake Regulatory Authority endorsements, and FOMO urgency.',
       icon: ShieldAlert,
       accent: 'violet',
-      badge: 'SEBI/RBI Rules',
+      badge: 'Regulatory Rules',
       action: onOpenHowItWorks
     },
     {

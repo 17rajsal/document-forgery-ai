@@ -7,55 +7,56 @@ import {
   ArrowRight,
   Loader2,
   X,
-  Sparkles,
   AlertCircle,
   Camera,
-  ShieldCheck
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import CameraCapture from './CameraCapture';
 
 export default function AnalyzeScreen({
   onAnalyzeFile,
   onAnalyzeText,
-  onRunDemo,
+  onRunSample,
   isAnalyzing,
   analysisStep,
   pipelineSteps = [],
   errorMessage,
   language = 'en'
 }) {
-  const [activeTab, setActiveTab] = useState('upload'); // 'upload' | 'text'
+  const [activeTab, setActiveTab] = useState('document'); // 'document' | 'message'
   const [documentInputMode, setDocumentInputMode] = useState('upload'); // 'upload' | 'camera'
   const [selectedFile, setSelectedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [pastedText, setPastedText] = useState('');
   const [pastedUrl, setPastedUrl] = useState('');
+  const [showSamples, setShowSamples] = useState(false);
   const fileInputRef = useRef(null);
 
   const sampleOptions = [
     {
       id: 'guaranteed_return',
-      label: 'Sample: Guaranteed 60% Return Offer',
-      badge: 'Sample Scam',
-      badgeColor: 'bg-rose-100 text-rose-800'
+      title: 'Guaranteed Return Offer',
+      desc: 'High-risk yield proposal promising fixed returns with artificial urgency.',
+      tag: 'Sample data'
     },
     {
       id: 'broker_impersonation',
-      label: 'Sample: Impersonated Regulatory Clearance',
-      badge: 'Sample Alert',
-      badgeColor: 'bg-amber-100 text-amber-800'
+      title: 'Impersonated Authority Notice',
+      desc: 'Falsely claimed official clearance notice demanding fee payments.',
+      tag: 'Sample data'
     },
     {
       id: 'educational_control',
-      label: 'Sample: Educational Advisory Handout',
-      badge: 'Low-Risk Control',
-      badgeColor: 'bg-emerald-100 text-emerald-800'
+      title: 'Educational Advisory Material',
+      desc: 'Standard risk education material explaining fee comparisons.',
+      tag: 'Sample data'
     },
     {
       id: 'tampered_demo',
-      label: 'Sample: Altered Amount Record',
-      badge: 'Sample Forgery',
-      badgeColor: 'bg-indigo-100 text-indigo-800'
+      title: 'Altered Document Record',
+      desc: 'Demonstration of localized amount modification and typography disparity.',
+      tag: 'Sample data'
     }
   ];
 
@@ -83,9 +84,9 @@ export default function AnalyzeScreen({
   };
 
   const handleStartAnalysis = () => {
-    if (activeTab === 'upload' && selectedFile) {
+    if (activeTab === 'document' && selectedFile) {
       onAnalyzeFile(selectedFile);
-    } else if (activeTab === 'text') {
+    } else if (activeTab === 'message') {
       onAnalyzeText({ text: pastedText, url: pastedUrl });
     }
   };
@@ -96,91 +97,63 @@ export default function AnalyzeScreen({
     onAnalyzeFile(file);
   };
 
-  const isReady = activeTab === 'upload' ? !!selectedFile : (pastedText.trim().length > 0 || pastedUrl.trim().length > 0);
+  const isReady =
+    activeTab === 'document'
+      ? !!selectedFile
+      : pastedText.trim().length > 0 || pastedUrl.trim().length > 0;
 
   return (
     <div className="max-w-3xl mx-auto py-4 space-y-6">
       {/* Title */}
       <div className="text-center space-y-1">
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight m-0">
+        <h2 className="text-2xl font-bold text-slate-900 tracking-tight m-0">
           Analyze Document or Message
         </h2>
         <p className="text-xs text-slate-500 m-0">
-          Choose an input method or select one of the curated sample cases below.
+          Inspect suspicious documents, messages, links, and QR codes for fraud indicators.
         </p>
       </div>
 
-      {/* QUICK TRY SAMPLE ROW */}
-      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5 uppercase tracking-wider">
-            <Sparkles className="h-4 w-4 text-blue-600" />
-            <span>Try Sample Scenarios (Instant 1-Click)</span>
-          </span>
-          <span className="text-[10px] text-slate-500 font-medium">
-            Sample data for demonstration purposes
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {sampleOptions.map((d) => (
-            <button
-              key={d.id}
-              onClick={() => onRunDemo(d.id)}
-              disabled={isAnalyzing}
-              className="p-2.5 rounded-xl bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-400 text-left transition cursor-pointer flex items-center justify-between gap-2 shadow-2xs disabled:opacity-50"
-            >
-              <div className="truncate">
-                <div className="text-xs font-bold text-slate-800 truncate">{d.label}</div>
-              </div>
-              <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold shrink-0 ${d.badgeColor}`}>
-                {d.badge}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* MAIN INPUT CARD */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
-        {/* Tab Toggle */}
-        <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80">
+      <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-5 shadow-xs">
+        {/* Main Tab Toggle: Document vs Message / URL */}
+        <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
           <button
-            onClick={() => setActiveTab('upload')}
-            className={`flex-1 py-2 rounded-lg text-xs font-bold transition cursor-pointer flex items-center justify-center gap-2 ${
-              activeTab === 'upload'
-                ? 'bg-white text-blue-700 shadow-xs'
+            onClick={() => setActiveTab('document')}
+            className={`flex-1 py-2 rounded-md text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-2 ${
+              activeTab === 'document'
+                ? 'bg-white text-blue-600 shadow-2xs font-bold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <FileText className="h-4 w-4" />
-            <span>Document (Upload or Camera)</span>
+            <span>Document</span>
           </button>
 
           <button
-            onClick={() => setActiveTab('text')}
-            className={`flex-1 py-2 rounded-lg text-xs font-bold transition cursor-pointer flex items-center justify-center gap-2 ${
-              activeTab === 'text'
-                ? 'bg-white text-blue-700 shadow-xs'
+            onClick={() => setActiveTab('message')}
+            className={`flex-1 py-2 rounded-md text-xs font-semibold transition cursor-pointer flex items-center justify-center gap-2 ${
+              activeTab === 'message'
+                ? 'bg-white text-blue-600 shadow-2xs font-bold'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <MessageSquare className="h-4 w-4" />
-            <span>Paste Suspicious Text / Link</span>
+            <span>Message / URL</span>
           </button>
         </div>
 
-        {/* TAB 1: UPLOAD & CAMERA */}
-        {activeTab === 'upload' ? (
+        {/* TAB 1: DOCUMENT */}
+        {activeTab === 'document' ? (
           <div className="space-y-4">
             {/* Input Method Selector: Upload File vs Use Camera */}
             <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
               <button
                 type="button"
                 onClick={() => setDocumentInputMode('upload')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
                   documentInputMode === 'upload'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white'
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                 }`}
               >
@@ -191,9 +164,9 @@ export default function AnalyzeScreen({
               <button
                 type="button"
                 onClick={() => setDocumentInputMode('camera')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
                   documentInputMode === 'camera'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white'
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                 }`}
               >
@@ -229,8 +202,8 @@ export default function AnalyzeScreen({
                       accept=".jpg,.jpeg,.png,.webp,.pdf,.tif,.tiff,.bmp,.docx"
                       onChange={handleFileChange}
                     />
-                    <div className="h-12 w-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
-                      <UploadCloud className="h-6 w-6" />
+                    <div className="h-11 w-11 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
+                      <UploadCloud className="h-5 w-5" />
                     </div>
                     <p className="text-xs font-semibold text-slate-800 mb-1">
                       Drag and drop document here, or <span className="text-blue-600 underline">browse</span>
@@ -240,10 +213,10 @@ export default function AnalyzeScreen({
                     </p>
                   </div>
                 ) : (
-                  <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-200 flex items-center justify-between">
+                  <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
                     <div className="flex items-center gap-3 overflow-hidden">
-                      <div className="h-10 w-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0">
-                        <FileText className="h-5 w-5" />
+                      <div className="h-9 w-9 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0">
+                        <FileText className="h-4 w-4" />
                       </div>
                       <div className="overflow-hidden">
                         <h4 className="text-xs font-bold text-slate-900 truncate m-0">{selectedFile.name}</h4>
@@ -255,7 +228,8 @@ export default function AnalyzeScreen({
                     {!isAnalyzing && (
                       <button
                         onClick={() => setSelectedFile(null)}
-                        className="p-1 rounded-lg text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                        title="Remove file"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -266,32 +240,32 @@ export default function AnalyzeScreen({
             )}
           </div>
         ) : (
-          /* TAB 2: TEXT & URL */
+          /* TAB 2: MESSAGE / URL */
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
-                Paste Investment Message (WhatsApp / Telegram / SMS)
+              <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                Paste suspicious message
               </label>
               <textarea
                 value={pastedText}
                 onChange={(e) => setPastedText(e.target.value)}
-                placeholder="Example: 'Invest ₹50,000 to receive ₹80,000 in 30 days! SEBI approved advisor. Pay immediately to UPI...'"
+                placeholder="Example: 'Invest ₹50,000 to receive ₹80,000 in 30 days! Guaranteed returns. Pay immediately to UPI...'"
                 rows={4}
-                className="w-full text-xs p-3 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-hidden font-sans bg-slate-50/40"
+                className="w-full text-xs p-3 rounded-lg border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-hidden font-sans bg-slate-50/50"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center gap-1">
+              <label className="block text-xs font-semibold text-slate-800 mb-1.5 flex items-center gap-1">
                 <Link className="h-3.5 w-3.5 text-slate-500" />
-                <span>Optional Website Link / URL</span>
+                <span>Paste URL</span>
               </label>
               <input
                 type="url"
                 value={pastedUrl}
                 onChange={(e) => setPastedUrl(e.target.value)}
-                placeholder="https://moonrise-fast-profit.example/activate"
-                className="w-full text-xs px-3 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-mono outline-hidden bg-slate-50/40"
+                placeholder="https://example-bonus-portal.com/activate"
+                className="w-full text-xs px-3 py-2.5 rounded-lg border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-mono outline-hidden bg-slate-50/50"
               />
             </div>
           </div>
@@ -299,7 +273,7 @@ export default function AnalyzeScreen({
 
         {/* Error message */}
         {errorMessage && (
-          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2">
+          <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-start gap-2">
             <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-rose-600" />
             <span>{errorMessage}</span>
           </div>
@@ -307,37 +281,37 @@ export default function AnalyzeScreen({
 
         {/* Progress indicator while analyzing */}
         {isAnalyzing && (
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
-            <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
+          <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2.5">
+            <div className="flex items-center justify-between text-xs font-medium text-slate-700">
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />
-                <span>Running Proofly Forensic Engine...</span>
+                <span>Running Proofly Analysis...</span>
               </div>
               <span className="font-mono text-[11px] text-blue-600">
                 Step {analysisStep + 1}/{pipelineSteps.length || 6}
               </span>
             </div>
             <p className="text-[11px] text-slate-500 font-mono m-0 truncate">
-              {pipelineSteps[analysisStep] || 'Correlating multimodal risk indicators...'}
+              {pipelineSteps[analysisStep] || 'Evaluating evidence indicators...'}
             </p>
             <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
               <div
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 h-1.5 transition-all duration-300 rounded-full"
+                className="bg-blue-600 h-1.5 transition-all duration-300 rounded-full"
                 style={{ width: `${((analysisStep + 1) / (pipelineSteps.length || 6)) * 100}%` }}
               />
             </div>
           </div>
         )}
 
-        {/* ACTION BUTTON (When in file upload mode or text mode) */}
-        {!(activeTab === 'upload' && documentInputMode === 'camera') && (
+        {/* PRIMARY ACTION BUTTON (When not in live camera capture mode) */}
+        {!(activeTab === 'document' && documentInputMode === 'camera') && (
           <button
             onClick={handleStartAnalysis}
             disabled={!isReady || isAnalyzing}
-            className={`w-full py-3.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-sm ${
+            className={`w-full py-3 px-4 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-2 cursor-pointer shadow-xs ${
               !isReady || isAnalyzing
                 ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/25'
+                : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white'
             }`}
           >
             {isAnalyzing ? (
@@ -347,11 +321,55 @@ export default function AnalyzeScreen({
               </>
             ) : (
               <>
-                <span>Analyze Now</span>
+                <span>Analyze</span>
                 <ArrowRight className="h-4 w-4" />
               </>
             )}
           </button>
+        )}
+      </div>
+
+      {/* SAMPLE DATA ACCESS: SMALL SECONDARY LINK BELOW INPUT CONTROLS */}
+      <div className="text-center space-y-3 pt-1">
+        <button
+          type="button"
+          onClick={() => setShowSamples(!showSamples)}
+          className="text-xs text-slate-500 hover:text-slate-800 transition cursor-pointer inline-flex items-center gap-1.5"
+        >
+          <span>Need an example?</span>
+          <span className="text-blue-600 underline font-medium">Try sample data</span>
+          {showSamples ? <ChevronUp className="h-3.5 w-3.5 text-slate-400" /> : <ChevronDown className="h-3.5 w-3.5 text-slate-400" />}
+        </button>
+
+        {/* REVEALED SAMPLE DATA SECTION */}
+        {showSamples && (
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left space-y-3 transition">
+            <div className="flex items-center justify-between text-[11px] text-slate-500 border-b border-slate-200 pb-2">
+              <span className="font-semibold text-slate-700">Sample data for demonstration</span>
+              <span>Click any case to test analysis</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {sampleOptions.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => onRunSample(s.id)}
+                  disabled={isAnalyzing}
+                  className="p-3 rounded-lg bg-white hover:bg-blue-50/40 border border-slate-200 hover:border-blue-300 text-left transition cursor-pointer flex flex-col justify-between gap-1.5 shadow-2xs disabled:opacity-50"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-slate-800">{s.title}</span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 shrink-0 font-medium">
+                      {s.tag}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 m-0 leading-normal">
+                    {s.desc}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>

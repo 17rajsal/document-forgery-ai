@@ -144,7 +144,7 @@ export default function VisualEvidenceMap({
               }`}
             >
               <span className="h-2 w-2 rounded-full bg-blue-500" />
-              <span>{language === 'hi' ? 'Pehchan / SEBI' : 'Regulatory'} ({counts.blue})</span>
+              <span>{language === 'hi' ? 'Pehchan / Regulatory Authority' : 'Regulatory'} ({counts.blue})</span>
             </button>
           )}
         </div>

@@ -37,14 +37,14 @@ export default function UploadPanel({
     {
       label: "Pre-IPO ₹50k Scheme",
       badge: "WhatsApp",
-      text: "EXCLUSIVE PRE-IPO OFFER! Invest ₹50,000 and get ₹80,000 guaranteed 30% monthly return. SEBI approved registration INZ999888777. Transfer immediately to UPI: scammer@okaxis or visit https://zerodha-bonus-invest.xyz",
+      text: "EXCLUSIVE PRE-IPO OFFER! Invest ₹50,000 and get ₹80,000 guaranteed 30% monthly return. claimed regulatory registration INZ999888777. Transfer immediately to UPI: scammer@okaxis or visit https://zerodha-bonus-invest.xyz",
       url: "https://zerodha-bonus-invest.xyz"
     },
     {
-      label: "Fake SEBI Advisory SMS",
+      label: "Fake Regulatory Authority Advisory SMS",
       badge: "SMS",
-      text: "URGENT SEBI ALERT: Your demat account KYC is suspended. To avoid ₹25,000 regulatory fine and receive guaranteed 40% intraday profits, update immediately at http://192.168.1.105/sebi-kyc",
-      url: "http://192.168.1.105/sebi-kyc"
+      text: "URGENT Regulatory Authority ALERT: Your demat account KYC is suspended. To avoid ₹25,000 regulatory fine and receive guaranteed 40% intraday profits, update immediately at http://192.168.1.105/portal-kyc",
+      url: "http://192.168.1.105/portal-kyc"
     },
     {
       label: "Phishing KYC Link",
@@ -223,7 +223,7 @@ export default function UploadPanel({
               <textarea
                 value={pastedText}
                 onChange={(e) => setPastedText(e.target.value)}
-                placeholder="Example: 'Guaranteed 30% monthly profit! SEBI approved broker. Send ₹50,000 to UPI scammer@okaxis...'"
+                placeholder="Example: 'Guaranteed 30% monthly profit! claimed regulatory broker. Send ₹50,000 to UPI scammer@okaxis...'"
                 rows={4}
                 className="w-full text-xs p-3 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-sans outline-hidden resize-none bg-slate-50/50"
               />

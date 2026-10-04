@@ -40,16 +40,16 @@ export default function Header({
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-lg sm:text-xl font-black tracking-tight text-slate-900 m-0 flex items-center gap-1.5">
-              <span>Proofly Investor</span>
+              <span>Proofly</span>
               <span className="text-blue-600 font-extrabold text-sm">•</span>
             </h1>
             <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-100">
               <Shield className="h-3 w-3" />
-              Investor Safety Platform
+              Document & Message Verification Platform
             </span>
           </div>
           <p className="text-xs text-slate-500 font-medium m-0 hidden sm:block">
-            Verify before you trust. Investor Safety & Scam Detection Platform
+            Verify before you trust. Verification Safety & Scam Detection Platform
           </p>
         </div>
       </div>
@@ -123,7 +123,7 @@ export default function Header({
 
         {/* User Profile Avatar */}
         <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-          <div className="h-8 w-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 text-xs font-semibold" title="Proofly Investor Workspace">
+          <div className="h-8 w-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 text-xs font-semibold" title="Proofly Workspace">
             <User className="h-4 w-4" />
           </div>
         </div>
