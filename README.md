@@ -7,7 +7,7 @@
 **An Explainable Multimodal Financial-Document Verification & Investor-Safety Platform**  
 *Built for the SANGYAN Investor Resilience Hackathon — IIT (BHU), in collaboration with SEBI and NSDL.*
 
-[![Live Demo](https://img.shields.io/badge/Render%20Live%20Demo-HTTPS%20Online-success.svg)](https://proofly-investor.onrender.com)
+[![Live Demo](https://img.shields.io/badge/Render%20Live%20Demo-HTTPS%20Online-success.svg)](https://proofly-investor-sangyan.onrender.com)
 [![Track](https://img.shields.io/badge/SANGYAN%20Hackathon-Track%20A%3A%20Digital%20Fraud%20Resilience-blue.svg)](https://iitbhu.ac.in)
 [![Track](https://img.shields.io/badge/Secondary-Track%20E%3A%20Content%20Literacy-indigo.svg)](https://iitbhu.ac.in)
 [![CI](https://github.com/17rajsal/document-forgery-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/17rajsal/document-forgery-ai/actions/workflows/ci.yml)
@@ -19,7 +19,7 @@
 </div>
 
 > [!TIP]
-> 🌐 **Persistent Public Application (Render)**: [https://proofly-investor.onrender.com](https://proofly-investor.onrender.com)  
+> 🌐 **Persistent Public Application (Render)**: [https://proofly-investor-sangyan.onrender.com](https://proofly-investor-sangyan.onrender.com)  
 > Configured and deployed via Render Multi-Stage Docker Blueprint (`render.yaml` + `Dockerfile`). Evaluators and hackathon judges can access the live application directly in any desktop or mobile browser without logging in. Both the React 19 SPA frontend and the FastAPI backend are unified in a single container.
 
 ---
@@ -99,9 +99,9 @@ Every document, screenshot, pasted message, or URL submitted to Proofly is evalu
 ```mermaid
 flowchart TD
     subgraph Client["Frontend Interface (React 19 + Tailwind CSS)"]
-        UI1["Document Upload (PDF, JPG, PNG, WEBP, TIFF, BMP, DOCX)"]
+        UI1["Document Ingestion: Upload & Live Camera Capture (PDF, JPG, PNG, WEBP, TIFF, BMP, DOCX)"]
         UI2["Suspicious Message & URL Paste (WhatsApp, Telegram, SMS)"]
-        UI3["1-Click SANGYAN Benchmark Scenarios"]
+        UI3["1-Click Curated Sample Scenarios"]
     end
 
     subgraph API["FastAPI Backend Gateway (Port 8000 / 7860)"]
@@ -231,7 +231,7 @@ Proofly includes rigorous test suites validating security, ML inference, entity 
 # 1. Run Core Multimodal Forensic Tests (10/10 Passed)
 python -m unittest tests/test_proofly.py
 
-# 2. Run Investor Safety & Scam Engine Tests (9/9 Passed)
+# 2. Run Investor Safety & Scam Engine Tests (12/12 Passed)
 python -m unittest tests/test_investor_safety.py
 
 # 3. Run Intelligence API Regression Tests (18/18 Passed)

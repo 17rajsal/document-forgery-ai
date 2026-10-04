@@ -164,6 +164,30 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
+  const handleNavigate = (target) => {
+    if (target === 'analyze') {
+      setCurrentScreen('analyze');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (target === 'home') {
+      setCurrentScreen('home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (target === 'how-it-works' || target === 'safety' || target === 'about') {
+      if (currentScreen !== 'home') {
+        setCurrentScreen('home');
+        setTimeout(() => {
+          const el = document.getElementById(target);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 80);
+      } else {
+        const el = document.getElementById(target);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (target === 'results') {
+      setCurrentScreen('results');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900 text-slate-800">
       {/* TOP HEADER */}
@@ -171,7 +195,7 @@ export default function App() {
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           {/* Logo & Brand */}
           <div
-            onClick={() => setCurrentScreen('home')}
+            onClick={() => handleNavigate('home')}
             className="flex items-center gap-2.5 cursor-pointer select-none"
           >
             <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-xs">
@@ -180,9 +204,6 @@ export default function App() {
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="font-black text-base tracking-tight text-slate-900">Proofly Investor</span>
-                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-blue-50 text-blue-700 border border-blue-100 font-mono">
-                  SANGYAN
-                </span>
               </div>
               <p className="text-[11px] text-slate-500 font-medium m-0 hidden sm:block">
                 Verify before you trust.
@@ -190,20 +211,20 @@ export default function App() {
             </div>
           </div>
 
-          {/* Simple Navigation Pills */}
-          <nav className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80 text-xs font-semibold">
+          {/* Navigation Items */}
+          <nav className="hidden sm:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/80 text-xs font-semibold">
             <button
-              onClick={() => setCurrentScreen('home')}
+              onClick={() => handleNavigate('home')}
               className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
                 currentScreen === 'home'
                   ? 'bg-white text-blue-700 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Home
+              Proofly Investor
             </button>
             <button
-              onClick={() => setCurrentScreen('analyze')}
+              onClick={() => handleNavigate('analyze')}
               className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
                 currentScreen === 'analyze'
                   ? 'bg-white text-blue-700 shadow-2xs'
@@ -212,9 +233,27 @@ export default function App() {
             >
               Analyze
             </button>
+            <button
+              onClick={() => handleNavigate('how-it-works')}
+              className="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer"
+            >
+              How It Works
+            </button>
+            <button
+              onClick={() => handleNavigate('safety')}
+              className="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer"
+            >
+              Safety
+            </button>
+            <button
+              onClick={() => handleNavigate('about')}
+              className="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer"
+            >
+              About
+            </button>
             {analysisResult && (
               <button
-                onClick={() => setCurrentScreen('results')}
+                onClick={() => handleNavigate('results')}
                 className={`px-3 py-1.5 rounded-lg transition cursor-pointer ${
                   currentScreen === 'results'
                     ? 'bg-white text-blue-700 shadow-2xs'
@@ -233,7 +272,7 @@ export default function App() {
               className="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-xs font-bold transition cursor-pointer"
             >
               <Sparkles className="h-3.5 w-3.5 text-blue-600" />
-              <span>Try Demo</span>
+              <span>Try Sample</span>
             </button>
 
             <button
@@ -289,17 +328,44 @@ export default function App() {
       </main>
 
       {/* FOOTER */}
-      <footer className="border-t border-slate-200 bg-white px-6 py-5 text-xs text-slate-500 mt-auto">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="font-black text-slate-900">Proofly Investor</span>
-            <span>•</span>
-            <span className="italic text-slate-600">Verify before you trust.</span>
-            <span>•</span>
-            <span>SANGYAN Hackathon (IIT BHU × SEBI × NSDL)</span>
+      <footer className="border-t border-slate-200 bg-white px-6 py-6 text-xs text-slate-500 mt-auto">
+        <div className="max-w-6xl mx-auto space-y-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="font-black text-slate-900 text-sm">Proofly Investor</span>
+              <span>•</span>
+              <span className="text-slate-600">Investor safety through explainable risk analysis.</span>
+            </div>
+            <div className="flex items-center gap-4 text-xs font-medium">
+              <button
+                onClick={() => handleNavigate('safety')}
+                className="text-slate-600 hover:text-blue-600 transition cursor-pointer"
+              >
+                Privacy
+              </button>
+              <button
+                onClick={() => handleNavigate('safety')}
+                className="text-slate-600 hover:text-blue-600 transition cursor-pointer"
+              >
+                Safety
+              </button>
+              <a
+                href="https://github.com/17rajsal/document-forgery-ai"
+                target="_blank"
+                rel="noreferrer"
+                className="text-slate-600 hover:text-blue-600 transition"
+              >
+                GitHub
+              </a>
+            </div>
           </div>
-          <div className="text-slate-400 font-mono text-[11px]">
-            Track A: Digital Fraud Resilience • Track E: Content Literacy
+          <div className="border-t border-slate-100 pt-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400">
+            <p className="m-0">
+              Disclaimer: Proofly provides risk indicators and educational guidance, not investment advice.
+            </p>
+            <p className="m-0">
+              An independent investor-safety technology project.
+            </p>
           </div>
         </div>
       </footer>

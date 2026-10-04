@@ -60,7 +60,7 @@ export default function AnalysisResult({
 
         <div className="mt-6 pt-4 border-t border-slate-100 text-center">
           <span className="text-[11px] text-slate-400">
-            Proofly Investor Engine • SANGYAN Hackathon (IIT BHU × SEBI × NSDL)
+            Proofly Investor Engine • Investor safety through explainable risk analysis.
           </span>
         </div>
       </div>

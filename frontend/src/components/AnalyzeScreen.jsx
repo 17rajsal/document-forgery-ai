@@ -9,10 +9,10 @@ import {
   X,
   Sparkles,
   AlertCircle,
-  ShieldAlert,
-  Layers,
-  Scale
+  Camera,
+  ShieldCheck
 } from 'lucide-react';
+import CameraCapture from './CameraCapture';
 
 export default function AnalyzeScreen({
   onAnalyzeFile,
@@ -25,35 +25,36 @@ export default function AnalyzeScreen({
   language = 'en'
 }) {
   const [activeTab, setActiveTab] = useState('upload'); // 'upload' | 'text'
+  const [documentInputMode, setDocumentInputMode] = useState('upload'); // 'upload' | 'camera'
   const [selectedFile, setSelectedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [pastedText, setPastedText] = useState('');
   const [pastedUrl, setPastedUrl] = useState('');
   const fileInputRef = useRef(null);
 
-  const demoOptions = [
+  const sampleOptions = [
     {
       id: 'guaranteed_return',
-      label: 'Scam Demo (60% Guaranteed Return)',
-      badge: 'Codex Scam',
+      label: 'Sample: Guaranteed 60% Return Offer',
+      badge: 'Sample Scam',
       badgeColor: 'bg-rose-100 text-rose-800'
     },
     {
       id: 'broker_impersonation',
-      label: 'CedarBridge Clearance (SEBI Impersonation)',
-      badge: 'Codex Alert',
+      label: 'Sample: Impersonated Regulatory Clearance',
+      badge: 'Sample Alert',
       badgeColor: 'bg-amber-100 text-amber-800'
     },
     {
       id: 'educational_control',
-      label: 'Riverstone Handout (Low-Risk Control)',
-      badge: 'Codex Control',
+      label: 'Sample: Educational Advisory Handout',
+      badge: 'Low-Risk Control',
       badgeColor: 'bg-emerald-100 text-emerald-800'
     },
     {
       id: 'tampered_demo',
-      label: 'Document Forgery Pair (₹5k -> ₹50k)',
-      badge: 'Codex Forgery',
+      label: 'Sample: Altered Amount Record',
+      badge: 'Sample Forgery',
       badgeColor: 'bg-indigo-100 text-indigo-800'
     }
   ];
@@ -89,6 +90,12 @@ export default function AnalyzeScreen({
     }
   };
 
+  const handlePhotoCaptured = (file) => {
+    setSelectedFile(file);
+    setDocumentInputMode('upload');
+    onAnalyzeFile(file);
+  };
+
   const isReady = activeTab === 'upload' ? !!selectedFile : (pastedText.trim().length > 0 || pastedUrl.trim().length > 0);
 
   return (
@@ -99,24 +106,24 @@ export default function AnalyzeScreen({
           Analyze Document or Message
         </h2>
         <p className="text-xs text-slate-500 m-0">
-          Choose an input method or select one of the curated Codex demo cases below.
+          Choose an input method or select one of the curated sample cases below.
         </p>
       </div>
 
-      {/* QUICK TRY DEMO ROW */}
-      <div className="bg-gradient-to-r from-blue-50/60 to-indigo-50/60 border border-blue-200/80 rounded-2xl p-4 space-y-2.5">
+      {/* QUICK TRY SAMPLE ROW */}
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-blue-950 flex items-center gap-1.5 uppercase tracking-wider">
+          <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5 uppercase tracking-wider">
             <Sparkles className="h-4 w-4 text-blue-600" />
-            <span>Try Codex Demo Scenarios (Instant 1-Click)</span>
+            <span>Try Sample Scenarios (Instant 1-Click)</span>
           </span>
-          <span className="text-[10px] font-mono text-blue-600 font-semibold">
-            SANGYAN QA Verified
+          <span className="text-[10px] text-slate-500 font-medium">
+            Sample data for demonstration purposes
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {demoOptions.map((d) => (
+          {sampleOptions.map((d) => (
             <button
               key={d.id}
               onClick={() => onRunDemo(d.id)}
@@ -147,7 +154,7 @@ export default function AnalyzeScreen({
             }`}
           >
             <FileText className="h-4 w-4" />
-            <span>Upload Image / PDF Document</span>
+            <span>Document (Upload or Camera)</span>
           </button>
 
           <button
@@ -163,58 +170,97 @@ export default function AnalyzeScreen({
           </button>
         </div>
 
-        {/* TAB 1: UPLOAD */}
+        {/* TAB 1: UPLOAD & CAMERA */}
         {activeTab === 'upload' ? (
-          <div>
-            {!selectedFile ? (
-              <div
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-xl p-8 text-center transition cursor-pointer flex flex-col items-center justify-center min-h-[220px] ${
-                  isDragging
-                    ? 'border-blue-500 bg-blue-50/50'
-                    : 'border-slate-300 hover:border-blue-400 bg-slate-50/60 hover:bg-blue-50/20'
+          <div className="space-y-4">
+            {/* Input Method Selector: Upload File vs Use Camera */}
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+              <button
+                type="button"
+                onClick={() => setDocumentInputMode('upload')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                  documentInputMode === 'upload'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                 }`}
               >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  className="hidden"
-                  accept=".jpg,.jpeg,.png,.webp,.pdf,.tif,.tiff,.bmp,.docx"
-                  onChange={handleFileChange}
-                />
-                <div className="h-12 w-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
-                  <UploadCloud className="h-6 w-6" />
-                </div>
-                <p className="text-xs font-semibold text-slate-800 mb-1">
-                  Drag and drop document here, or <span className="text-blue-600 underline">browse</span>
-                </p>
-                <p className="text-[11px] text-slate-400 m-0">
-                  Supported formats: PDF, DOCX, JPG, PNG, WEBP, TIFF, BMP (Max 30MB)
-                </p>
-              </div>
+                <UploadCloud className="h-4 w-4" />
+                <span>Upload File</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setDocumentInputMode('camera')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                  documentInputMode === 'camera'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+              >
+                <Camera className="h-4 w-4" />
+                <span>Use Camera</span>
+              </button>
+            </div>
+
+            {documentInputMode === 'camera' ? (
+              <CameraCapture
+                onPhotoCaptured={handlePhotoCaptured}
+                onCancel={() => setDocumentInputMode('upload')}
+                isAnalyzing={isAnalyzing}
+              />
             ) : (
-              <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-200 flex items-center justify-between">
-                <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="h-10 w-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0">
-                    <FileText className="h-5 w-5" />
-                  </div>
-                  <div className="overflow-hidden">
-                    <h4 className="text-xs font-bold text-slate-900 truncate m-0">{selectedFile.name}</h4>
-                    <p className="text-[11px] text-slate-500 m-0">
-                      {(selectedFile.size / 1024).toFixed(1)} KB • Ready for analysis
+              <div>
+                {!selectedFile ? (
+                  <div
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                    className={`border-2 border-dashed rounded-xl p-8 text-center transition cursor-pointer flex flex-col items-center justify-center min-h-[200px] ${
+                      isDragging
+                        ? 'border-blue-500 bg-blue-50/50'
+                        : 'border-slate-300 hover:border-blue-400 bg-slate-50/60 hover:bg-blue-50/20'
+                    }`}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      className="hidden"
+                      accept=".jpg,.jpeg,.png,.webp,.pdf,.tif,.tiff,.bmp,.docx"
+                      onChange={handleFileChange}
+                    />
+                    <div className="h-12 w-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
+                      <UploadCloud className="h-6 w-6" />
+                    </div>
+                    <p className="text-xs font-semibold text-slate-800 mb-1">
+                      Drag and drop document here, or <span className="text-blue-600 underline">browse</span>
+                    </p>
+                    <p className="text-[11px] text-slate-400 m-0">
+                      Supported formats: PDF, DOCX, JPG, PNG, WEBP, TIFF, BMP (Max 30MB)
                     </p>
                   </div>
-                </div>
-                {!isAnalyzing && (
-                  <button
-                    onClick={() => setSelectedFile(null)}
-                    className="p-1 rounded-lg text-slate-400 hover:text-rose-600 transition cursor-pointer"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
+                ) : (
+                  <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-200 flex items-center justify-between">
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <div className="h-10 w-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0">
+                        <FileText className="h-5 w-5" />
+                      </div>
+                      <div className="overflow-hidden">
+                        <h4 className="text-xs font-bold text-slate-900 truncate m-0">{selectedFile.name}</h4>
+                        <p className="text-[11px] text-slate-500 m-0">
+                          {(selectedFile.size / 1024).toFixed(1)} KB • Ready for analysis
+                        </p>
+                      </div>
+                    </div>
+                    {!isAnalyzing && (
+                      <button
+                        onClick={() => setSelectedFile(null)}
+                        className="p-1 rounded-lg text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             )}
@@ -265,7 +311,7 @@ export default function AnalyzeScreen({
             <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />
-                <span>Running Proofly Multimodal Engine...</span>
+                <span>Running Proofly Forensic Engine...</span>
               </div>
               <span className="font-mono text-[11px] text-blue-600">
                 Step {analysisStep + 1}/{pipelineSteps.length || 6}
@@ -283,28 +329,30 @@ export default function AnalyzeScreen({
           </div>
         )}
 
-        {/* ACTION BUTTON */}
-        <button
-          onClick={handleStartAnalysis}
-          disabled={!isReady || isAnalyzing}
-          className={`w-full py-3.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-sm ${
-            !isReady || isAnalyzing
-              ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/25'
-          }`}
-        >
-          {isAnalyzing ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Analyzing Evidence...</span>
-            </>
-          ) : (
-            <>
-              <span>Run Verification</span>
-              <ArrowRight className="h-4 w-4" />
-            </>
-          )}
-        </button>
+        {/* ACTION BUTTON (When in file upload mode or text mode) */}
+        {!(activeTab === 'upload' && documentInputMode === 'camera') && (
+          <button
+            onClick={handleStartAnalysis}
+            disabled={!isReady || isAnalyzing}
+            className={`w-full py-3.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-sm ${
+              !isReady || isAnalyzing
+                ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/25'
+            }`}
+          >
+            {isAnalyzing ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Analyzing Evidence...</span>
+              </>
+            ) : (
+              <>
+                <span>Analyze Now</span>
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
+          </button>
+        )}
       </div>
     </div>
   );

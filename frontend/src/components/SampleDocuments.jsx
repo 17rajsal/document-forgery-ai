@@ -24,11 +24,11 @@ export default function SampleDocuments({
   const demoScenarios = [
     {
       id: 'sebi_nsdl_50k_80k_certificate',
-      title: "Benchmark: SEBI & NSDL Guaranteed Allotment (₹50k -> ₹80k)",
-      title_hi: "Mukhya Case: SEBI & NSDL Guaranteed Allotment (₹50k -> ₹80k)",
+      title: "Sample: Guaranteed Return Allotment Scheme (₹50k -> ₹80k)",
+      title_hi: "Sample Case: Guaranteed Allotment Scheme (₹50k -> ₹80k)",
       persona: "Promised ₹80,000 return in 30 days for ₹50,000; fake SEBI reg INZ999888777, personal UPI QR vikram.personal88@okaxis",
       persona_hi: "30 din mein ₹50,000 se ₹80,000 ka wada, jhoothi SEBI reg aur personal UPI QR",
-      tag: "Primary SANGYAN Benchmark",
+      tag: "Sample Analysis",
       tag_color: "bg-rose-100 text-rose-800 border-rose-200",
       signals: ["₹50k -> ₹80k (60% 30-day)", "Fake Reg INZ999888777", "Personal UPI QR", "Digital Splicing", "DEMO SAMPLE Watermark"],
       icon: ShieldAlert,
@@ -86,7 +86,7 @@ export default function SampleDocuments({
 
   return (
     <div className="space-y-6 mb-8">
-      {/* SANGYAN HACKATHON BENCHMARK CASES */}
+      {/* CURATED SAMPLE SCENARIOS */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 text-white rounded-2xl p-6 shadow-sm border border-slate-700">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-slate-700/80 pb-4">
           <div className="flex items-center gap-3">
@@ -96,16 +96,16 @@ export default function SampleDocuments({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-white m-0">
-                  {language === 'hi' ? 'SANGYAN Hackathon Benchmark Scenarios' : 'SANGYAN Hackathon Benchmark Scenarios'}
+                  {language === 'hi' ? 'Niveshak Suraksha Sample Scenarios' : 'Curated Investor Safety Sample Scenarios'}
                 </h3>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-400/30">
-                  Deterministic Cases
+                  Sample Data
                 </span>
               </div>
               <p className="text-xs text-slate-300 m-0">
                 {language === 'hi'
-                  ? 'Kavita aur Bharat ke niveshakon ke anubhav par aadharit live test cases.'
-                  : 'Curated test cases reflecting real-world financial fraud vectors targeted at retail investors.'}
+                  ? 'Niveshakon ki suraksha ke liye banaye gaye synthetic sample cases. Sample data for demonstration purposes.'
+                  : 'Curated synthetic sample cases reflecting common investor fraud patterns. Sample data for demonstration purposes.'}
               </p>
             </div>
           </div>

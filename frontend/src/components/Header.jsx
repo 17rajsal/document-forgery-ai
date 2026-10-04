@@ -44,12 +44,12 @@ export default function Header({
               <span className="text-blue-600 font-extrabold text-sm">•</span>
             </h1>
             <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-100">
-              <Sparkles className="h-3 w-3" />
-              SANGYAN Hackathon — IIT (BHU) × SEBI × NSDL
+              <Shield className="h-3 w-3" />
+              Investor Safety Platform
             </span>
           </div>
           <p className="text-xs text-slate-500 font-medium m-0 hidden sm:block">
-            Verify before you trust. AI-Powered Investor Safety & Multimodal Scam Resilience
+            Verify before you trust. Investor Safety & Scam Detection Platform
           </p>
         </div>
       </div>

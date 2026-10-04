@@ -25,7 +25,7 @@ export default function Sidebar({
 }) {
   const navItems = [
     { id: 'new-analysis', label: 'New Analysis', icon: FilePlus, action: onNewAnalysis },
-    { id: 'demos', label: 'SANGYAN Demos', icon: Sparkles, badge: 'Kavita Case', action: onOpenDemoSection },
+    { id: 'demos', label: 'Sample Scenarios', icon: Sparkles, badge: 'Sample', action: onOpenDemoSection },
     { id: 'samples', label: 'Sample Documents', icon: FolderOpen },
     { id: 'history', label: 'Analysis History', icon: History, count: historyCount },
     { id: 'formats', label: 'Supported Formats', icon: FileCode },
@@ -135,11 +135,11 @@ export default function Sidebar({
 
         {/* Backend & Security Status Box */}
         <div className="p-4 border-t border-slate-100 space-y-3">
-          {/* SANGYAN Hackathon Track Pill */}
+          {/* Proofly Investor Platform Pill */}
           <div className="p-2.5 rounded-xl bg-blue-50/60 border border-blue-200/60 text-[11px] space-y-1">
-            <span className="font-bold text-blue-900 block">SANGYAN Hackathon</span>
+            <span className="font-bold text-blue-900 block">Proofly Investor</span>
             <p className="text-[10px] text-blue-700 m-0 leading-tight">
-              Track A: Digital Fraud & Scam Resilience
+              Investor Safety & Scam Detection
             </p>
           </div>
 
