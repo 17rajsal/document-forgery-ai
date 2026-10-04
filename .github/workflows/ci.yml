@@ -55,3 +55,8 @@ jobs:
       - name: Run Core Multimodal Forensic Tests
         run: |
           python -m unittest tests/test_proofly.py -v
+
+      - name: Run Codex Demo Assets QA
+        run: |
+          python scripts/qa/check_demo_assets.py
+
