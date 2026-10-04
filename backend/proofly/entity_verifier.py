@@ -6,7 +6,7 @@ Uses an offline public directory mirror derived from published SEBI/NSDL registr
 """
 
 import re
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
 from difflib import SequenceMatcher
 
 # Registry Source Attribution
